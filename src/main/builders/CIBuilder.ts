@@ -14,7 +14,7 @@ import {
   AsyncStepResult,
   IBStep,
   BStep,
-} from './types';
+} from './Types';
 import { Exception } from '../util';
 import { Either, ifElseChain, Right, asyncPipeEither } from '../fp';
 
