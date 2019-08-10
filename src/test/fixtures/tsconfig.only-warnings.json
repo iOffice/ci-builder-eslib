@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "files": [
+    "src/test/fixtures/onlyWarnings.ts"
+  ]
+}

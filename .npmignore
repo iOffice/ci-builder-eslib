@@ -1,0 +1,15 @@
+.idea
+build
+node_modules
+docs
+src
+.editorconfig
+.eslintrc.json
+.gitignore
+.npmignore
+.prettierrc.json
+Makefile
+tsconfig.json
+yarn.lock
+ciBuilder-log.json
+

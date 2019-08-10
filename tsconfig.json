@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "noEmit": false,
+    "outDir": "./build",
+    "declaration": true,
+    "baseUrl": ".",
+    "target": "es2015",
+    "lib": ["es2015", "es7"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "incremental": true,
+    "tsBuildInfoFile": "./build/tsconfig.tsbuildinfo",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/main/index.ts",
+    "src/main/bin/cli.ts",
+    "src/main/bin/slack.ts",
+    "src/test/index.ts",
+    "src/build.ts",
+    "src/builder.test.ts",
+    "src/test/builder/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "target",
+    "settings",
+    "project",
+    "test-output"
+  ]
+}
