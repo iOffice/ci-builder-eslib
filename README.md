@@ -2,7 +2,7 @@
 
 [![NPM Version](https://img.shields.io/npm/v/@ioffice/ci-builder.svg)](https://www.npmjs.com/package/@ioffice/ci-builder)
 [![License](https://img.shields.io/npm/l/@ioffice/ci-builder.svg)](LICENSE)
-[![Build Status](https://travis-ci.com/iOffice/ci-builder.svg?branch=master)](https://travis-ci.com/iOffice/ci-builder)
+[![Build Status](https://travis-ci.com/iOffice/ci-builder-eslib.svg?branch=master)](https://travis-ci.com/iOffice/ci-builder-eslib)
 
 CIBuilder is a tool to help us specify the build process within the node environment. It does this
 by providing a single point of entry which branches off depending on the defined methods and 
