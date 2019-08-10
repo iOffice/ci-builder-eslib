@@ -8,6 +8,8 @@ src
 .gitignore
 .npmignore
 .prettierrc.json
+.travis.yml
+ci-builder-eslib.iml
 Makefile
 tsconfig.json
 yarn.lock
