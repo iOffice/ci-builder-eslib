@@ -32,4 +32,5 @@ script:
   - make run
 
 after_script:
+  - cat ciBuilder-log.json
   - node build/main/bin/slack.js
