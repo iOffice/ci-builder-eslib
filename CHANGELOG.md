@@ -12,3 +12,10 @@ As per semantic versioning
 
 
 ## [Unreleased]
+
+## [0.0.1] - August 10, 2019
+- Migrated tc-builder modified source code to this project.
+
+
+[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.0.1...HEAD
+[0.0.1]: https://github.com/iOffice/ci-builder-eslib/compare/feda23fef09b15cae64ba9bece252f145ecbb974...0.0.1
