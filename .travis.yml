@@ -1,0 +1,33 @@
+language: node_js
+
+node_js:
+  - 8
+
+branches:
+  only:
+    - master
+
+cache: yarn
+
+env:
+  global:
+  # SLACK
+  - secure: "eHwdgkLw71q2odlbXeBKOGEMUgUSS4yp4vrzquieuEvb7wrLzUAdK8r5SHk/5R37iY19iRuxIpLwz1wFFbmUWsx4nr4MATWO8t+udNpaKSDE51AyvieKYuEiqChhVLIDhdFk4JOl0ZOIL2RQGDGiEMBcdQNZw8pF9md4ybpVjYu5rrF0ATTNT5o+CsTlDeo4sPrQie5qs8lbg5JTQims2g4mNFDiEzdh7EhYb2gR6bk6OAPyG7bPxE+ff0+oG/HCmHXpyVSnWuktRqJfZJAjuANWPSkjd5oinq1DpNZ0RHYTl0bk9H3E/3lP4fhhzn1MQ37V0BZfuTW84SqaN+XHja/cN2vN+ibKXOPDJSinC5hYmGK+lU0BZzsQGt8UCMqs6HGXYRANYK3yzE/QsVhgHlKkCTiXvxofEs4DB3J0bSeFeyCMJV+dB/sDNdIaK2KiwbQkjpV2F2STLvr7KcnQ/ayrhlBNrE94YHT5fL2s573COI7BhA+ybpop25KdMXQKndqKOrHgNWuiObVScWMVrdx9vGfoutBRmXOrxg61Sh0O/XvaV7vE3uYZclcOCJaIlrqE2/lCS/M+myltUt4E4Th9C3YWKsLMUwvUtpyvs12Zzqdxo2lmUW6Z57YWCGTT/AKCeJ7DR9jdHkwcHx/8HC4FOTTxsF/aeBBcKkRQFN4="
+  # NPM
+  - secure: "mbpZErMIK78Y8YZ1KsAAUUEm32zbRldsg+gdN0cqhQVbJ6FfgZpPAX/pZVfFSWXFCPnNDGw0ComDlLo41vl3Jl5djfk8CBAJTzelc2lDYK0uT0h+8f7QQBcfAVtk7Fqjr7lpvmwLcSwuEUBVmQkfw2UsqGmIczCxf02qcjoMpF/TZn78CzJ/LHPUKTlSW4Zk1zCRgxdslv7Zk2boJL9GQRq5Sl3mvn6wQiVZnhlnzwU9rxUck42iP+UGGcdMD9dt/yJ1e2UmItUAHp9/zVlA0nRHHfPUBO64KrZ010t36EG4Fqm4TTLoaZFkCx66W6Rr31B6vuS6HedJLQiWpuWu2w7dwGCjeZQzdls3Jgp6PIbq5JY3J+HeKOjBn2+WgQ+pz5sXBTJeaLuvmnv/JjZ/wPh0nx0sStSckgFZ7oG1m2fQAhHWdKugwempeRihtUhrO8FTkiCyX0Qr/f+mhpUgXNDBO8a6/S7c05J+2o/+/fMRUyfZBf7uOXYDdg0XwyEiDu28Ti+ONpzSnWbHFan0QCn+7X5eDWG7OQ5XK+X+jDqmCLVJMp5aoVGLIRRgs3ngQB34DegNUsA8pWuOqUvua7Q+WCNB1BLOqbRybuPV6QBAKeD4ut/hDkcDVNkqZWI0QSV9jrnPRZMNwjgk7t24N3hnCO8BoWUNMBhM1mTY6OE="
+  # GITHUB
+  - secure: "ztHcTp4NUqk71RGBcSNrH8KiBccQbP5QKSz5lfvp/Rd6S5ucYU/gxaSbsvlYblKS0foVO/kwR1PFSsEJyEAMDdtIrGcdU5CSRCx1qMwjDRZtrXR70gmkwxQEzYz6nlI4B5Cd80/HtvCTQmUBBCZVR1QoaO93g5hq4RIjkk6tdb/BwTG6Fl0+YuL1ZB36CfCXGJgCFbHyFQl92LnP3gpa/FxNf42Paru0nXHskkqd98SY+oiffJvNGRvOT9YlymH2j8mPXTSObhK36pvvgNHIXOGn3yJzXUTP80vEgqAMp633liRVeWt5Qf/QWYyYatD6NjjGwGgknRE0nCu+uYtJLhOtWsyx6iBl84ZEEgJ87G932uNZpB4oeJEuXjkhe10/jNOaBjN8yg/5/gSS7HSN+7Vc6KluS8omL/8d+9Pt+e5GPlR9diLCQ3s6f1pRLdhP38OLYxs6cN0+Ek/kdpp0YKX8IfIdyrm2Ymcu82i6zO1v68cV8CMr/BKYas5Oyt2fT0CyntDwLu8brGWUvJspnuPYgg32oYn+cROxuwTg8H7sKlNDgI/Mz3DpirQdqPhf9NTnum2zwSbORD1xr9GKkXHXtb+8BQhrpDfpwcXWWwNUoItSCtHKkQ+lwtiFW7gf9V6XcfTitBgrk/6m8doqd8cltq+DbK7xZhKs5N4/OOM="
+
+before_install:
+  - echo "//registry.npmjs.com/:_authToken=\${NPM_TOKEN}" > .npmrc
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH="$HOME/.yarn/bin:$PATH"
+
+install:
+  - yarn install
+
+script:
+  - make run
+
+after_script:
+  - node build/main/bin/slack.js
