@@ -42,6 +42,7 @@ enum BStep {
   nonCI,
   test,
   preRelease,
+  startRelease,
   releaseSetup,
   beforeVerifyPullRequest,
   verifyRelease,

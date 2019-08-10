@@ -107,10 +107,15 @@ abstract class CIBuilder {
         description: 'running pre-release',
         method: this.createPreRelease.bind(this),
       },
+      [BStep.startRelease]: {
+        name: 'startRelease',
+        description: 'starting the release-setup',
+        method: this.runReleaseSetup.bind(this),
+      },
       [BStep.releaseSetup]: {
         name: 'releaseSetup',
-        description: 'running release-setup',
-        method: this.runReleaseSetup.bind(this),
+        description: 'running release-setup hook',
+        method: this.releaseSetup.bind(this),
       },
       [BStep.beforeVerifyPullRequest]: {
         name: 'beforeVerifyPullRequest',
@@ -172,7 +177,7 @@ abstract class CIBuilder {
 
     return ifElseChain(
       [isPreRelease, _ => this.runStep(this.buildStep[BStep.preRelease])],
-      [isReleaseSetup, _ => this.runStep(this.buildStep[BStep.releaseSetup])],
+      [isReleaseSetup, _ => this.runStep(this.buildStep[BStep.startRelease])],
     ).getOrElse(_ => this.runStep(this.buildStep[BStep.test]));
   }
 
