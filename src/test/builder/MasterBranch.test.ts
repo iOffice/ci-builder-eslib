@@ -5,7 +5,7 @@ import { Left } from '../../main/fp';
 import { default as mockedEnv } from 'mocked-env';
 import { assert, expect } from 'chai';
 
-describe('AbstractBuilder - Master Branch', () => {
+describe('CIBuilder - Master Branch', () => {
   let restoreEnv: () => void = () => {};
   let execCmdStub: sinon.SinonStub;
   let execStub: sinon.SinonStub;
@@ -32,7 +32,7 @@ describe('AbstractBuilder - Master Branch', () => {
       TEAMCITY_TARGET_BRANCH: 'master',
       TEAMCITY_COMMIT_MESSAGE:
         'Merge pull request #12 from iOffice/superBranch did something good',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -57,7 +57,7 @@ describe('AbstractBuilder - Master Branch', () => {
       TEAMCITY_TARGET_BRANCH: 'master',
       TEAMCITY_COMMIT_MESSAGE:
         'Merge pull request #12 from iOffice/release\n0.0.0',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
@@ -85,7 +85,7 @@ describe('AbstractBuilder - Master Branch', () => {
       TEAMCITY_TARGET_BRANCH: 'master',
       TEAMCITY_COMMIT_MESSAGE:
         'Merge pull request #12 from iOffice/release 0.0.0',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
@@ -113,7 +113,7 @@ describe('AbstractBuilder - Master Branch', () => {
       TEAMCITY_TARGET_BRANCH: 'master',
       TEAMCITY_COMMIT_MESSAGE:
         'Merge pull request #12 from iOffice/release 0.0.0',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -135,7 +135,7 @@ describe('AbstractBuilder - Master Branch', () => {
       TEAMCITY_TARGET_BRANCH: 'master',
       TEAMCITY_COMMIT_MESSAGE:
         'Merge pull request #12 from iOffice/release 0.0.0',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();

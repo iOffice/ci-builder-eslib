@@ -7,7 +7,7 @@ import { default as mockedEnv } from 'mocked-env';
 import { assert, expect } from 'chai';
 import { getEnv, TC } from '../../main/services/environments';
 
-describe('AbstractBuilder - Pull Request', () => {
+describe('CIBuilder - Pull Request', () => {
   let restoreEnv: () => void = () => {};
   let execCmdStub: sinon.SinonStub;
   let execStub: sinon.SinonStub;
@@ -39,7 +39,7 @@ describe('AbstractBuilder - Pull Request', () => {
       TEAMCITY: 'true',
       TEAMCITY_PULL_REQUEST_BRANCH: 'myBranch',
       TEAMCITY_TARGET_BRANCH: 'master',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
@@ -66,7 +66,7 @@ describe('AbstractBuilder - Pull Request', () => {
       TEAMCITY: 'true',
       TEAMCITY_PULL_REQUEST_BRANCH: 'myBranch',
       TEAMCITY_TARGET_BRANCH: 'master',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
@@ -94,7 +94,7 @@ describe('AbstractBuilder - Pull Request', () => {
       TEAMCITY: 'true',
       TEAMCITY_PULL_REQUEST_BRANCH: 'release',
       TEAMCITY_TARGET_BRANCH: 'master',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
@@ -122,7 +122,7 @@ describe('AbstractBuilder - Pull Request', () => {
       TEAMCITY: 'true',
       TEAMCITY_PULL_REQUEST_BRANCH: 'release',
       TEAMCITY_TARGET_BRANCH: 'master',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -161,7 +161,7 @@ describe('AbstractBuilder - Pull Request', () => {
       CI: 'true',
       TEAMCITY_PULL_REQUEST_BRANCH: 'release',
       TEAMCITY_TARGET_BRANCH: 'master',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -182,7 +182,7 @@ describe('AbstractBuilder - Pull Request', () => {
       TEAMCITY: 'true',
       TEAMCITY_PULL_REQUEST_BRANCH: 'myBranch',
       TEAMCITY_TARGET_BRANCH: 'master',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -202,7 +202,7 @@ describe('AbstractBuilder - Pull Request', () => {
       TEAMCITY: 'true',
       TEAMCITY_PULL_REQUEST_BRANCH: 'release',
       TEAMCITY_TARGET_BRANCH: 'master',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();

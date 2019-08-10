@@ -3,7 +3,7 @@ import { StepResult } from '../../main';
 import { expect, assert } from 'chai';
 import { default as mockedEnv } from 'mocked-env';
 
-describe('AbstractBuilder - Basic', () => {
+describe('CIBuilder - Basic', () => {
   let restoreEnv: () => void = () => {};
 
   afterEach(() => {
@@ -18,6 +18,7 @@ describe('AbstractBuilder - Basic', () => {
       }
     }
 
+    restoreEnv = mockedEnv({}, { clear: true });
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
     result.fold(
@@ -34,6 +35,8 @@ describe('AbstractBuilder - Basic', () => {
         return this.io.success(0, '(override) skipping tests');
       }
     }
+
+    restoreEnv = mockedEnv({}, { clear: true });
     const builder = makeBuilder(TestBuilder);
     await builder.run();
     checkLogs(builder.logSpy, [['(override) skipping tests']]);
@@ -51,7 +54,7 @@ describe('AbstractBuilder - Basic', () => {
       TEAMCITY: 'true',
       TEAMCITY_TARGET_BRANCH: 'random',
       TEAMCITY_COMMIT_MESSAGE: '[WIP] test message',
-    });
+    }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();

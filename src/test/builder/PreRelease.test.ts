@@ -7,7 +7,7 @@ import { Left, Right } from '../../main/fp';
 import { default as mockedEnv } from 'mocked-env';
 import { assert, expect } from 'chai';
 
-describe('AbstractBuilder - PreRelease', () => {
+describe('CIBuilder - PreRelease', () => {
   let restoreEnv: () => void = () => {};
   let execCmdStub: sinon.SinonStub;
   let execStub: sinon.SinonStub;
@@ -31,7 +31,7 @@ describe('AbstractBuilder - PreRelease', () => {
   it('stops if uncommitted', async () => {
     class TestBuilder extends Builder {}
 
-    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' });
+    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     builder.gitStub.callsFake(async () => Right(['M file1', 'N file 2']));
@@ -48,7 +48,7 @@ describe('AbstractBuilder - PreRelease', () => {
   it('fails - unable to get branch name', async () => {
     class TestBuilder extends Builder {}
 
-    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' });
+    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' }, { clear: true });
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
@@ -63,7 +63,7 @@ describe('AbstractBuilder - PreRelease', () => {
   it('fails - unable to switch branch', async () => {
     class TestBuilder extends Builder {}
 
-    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' });
+    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' }, { clear: true });
     execStub
       .withArgs(`git rev-parse --abbrev-ref HEAD`)
       .returns(Promise.resolve(Right('someBranch')));
@@ -86,7 +86,7 @@ describe('AbstractBuilder - PreRelease', () => {
         return this.io.failure('stop before publish');
       }
     }
-    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' });
+    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' }, { clear: true });
     execStub
       .withArgs(`git rev-parse --abbrev-ref HEAD`)
       .returns(Promise.resolve(Right('someBranch')))
@@ -116,7 +116,7 @@ describe('AbstractBuilder - PreRelease', () => {
         return this.io.failure('stop on publish');
       }
     }
-    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' });
+    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' }, { clear: true });
     execStub
       .withArgs(`git rev-parse --abbrev-ref HEAD`)
       .returns(Promise.resolve(Right('someBranch')))
@@ -142,7 +142,7 @@ describe('AbstractBuilder - PreRelease', () => {
 
   it('success', async () => {
     class TestBuilder extends Builder {}
-    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' });
+    restoreEnv = mockedEnv({ PRE_RELEASE: 'true' }, { clear: true });
     execStub
       .withArgs(`git rev-parse --abbrev-ref HEAD`)
       .returns(Promise.resolve(Right('someBranch')))
