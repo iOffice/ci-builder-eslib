@@ -3,7 +3,10 @@ import { CISlack } from './CISlack';
 class TravisSlack extends CISlack {
   getTitle(): string {
     const { repo, buildNumber } = this.env;
-    return `${repo} [Travis ${this.getBuildType()} Build #${buildNumber}]`;
+    const buildType = this.getBuildType()
+      .map(x => ` ${x}`)
+      .getOrElse('');
+    return `${repo} [Travis${buildType} Build #${buildNumber}]`;
   }
 
   getTitleLink(): string {

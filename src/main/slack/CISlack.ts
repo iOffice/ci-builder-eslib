@@ -4,7 +4,7 @@ import { IBuilderMessages, Provider } from '../services';
 import { IAction, IField, IAttachment } from './Types';
 import { StepResult } from '../builders';
 import { Exception } from '../util';
-import { Either, Option, TryAsync } from '../fp';
+import { Either, Option, TryAsync, Some, None } from '../fp';
 
 /**
  * Service to send slack messages. For this to work there needs to be
@@ -59,10 +59,10 @@ abstract class CISlack {
     return 'good';
   }
 
-  getBuildType(): string {
-    if (this.env.pullRequestBranch) return 'Pull Request';
-    if (this.isRelease) return 'Release';
-    return `${this.env.targetBranch} Branch`;
+  getBuildType(): Option<string> {
+    if (this.env.pullRequestBranch) return Some('Pull Request');
+    if (this.isRelease) return Some('Release');
+    return None;
   }
 
   getBuildBranch(): string {
@@ -135,7 +135,9 @@ abstract class CISlack {
     const env = this.env;
     const status = this.getStatus();
     const statusMessage = this.getStatusMessage(status);
-    const buildType = this.getBuildType();
+    const buildType = this.getBuildType()
+      .map(x => ` _${x}_`)
+      .getOrElse('');
     const buildBranch = this.getBuildBranch();
     return {
       fallback: `${status}: ${env.repo}/${buildBranch} build ${statusMessage}`,
@@ -143,7 +145,7 @@ abstract class CISlack {
       title: this.getTitle(),
       // prettier-ignore
       'title_link': this.getTitleLink(),
-      text: `The _${buildType}_ build for the *${buildBranch}* branch ${statusMessage}`,
+      text: `The${buildType} build for the *${buildBranch}* branch ${statusMessage}`,
       fields: this.getFields(),
       actions: this.getActions(),
     };
