@@ -55,6 +55,7 @@ abstract class CISlack {
     if (!this.messages) return 'good';
     if (this.messages.errors.length > 0) return 'danger';
     if (this.messages.warnings.length > 0) return 'warning';
+    if (+(process.env['TRAVIS_TEST_RESULT'] || '0') === 1) return 'danger';
     return 'good';
   }
 
