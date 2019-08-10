@@ -11,6 +11,7 @@ import {
   Environment,
   Git,
   Github,
+  IBuilderMessages,
   IO,
   Yarn,
 } from '../../main/services';
@@ -40,6 +41,15 @@ class FakeEnv extends Environment {
 class FakeIO extends IO {
   openBlock(): void {}
   closeBlock(): void {}
+  loadLogFile(): Either<Exception, IBuilderMessages> {
+    return Right({ errors: [], warnings: [] });
+  }
+  setLogFileReleaseFlag(): Either<Exception, 0> {
+    return Right(0);
+  }
+  dumpMessages(): Either<Exception, 0> {
+    return Right(0);
+  }
 }
 
 function makeBuilder(b: IBuilder): Builder {
