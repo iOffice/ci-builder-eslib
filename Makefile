@@ -4,10 +4,8 @@ preRelease: clean build
 releaseSetup: clean build
 	RELEASE_SETUP=true node build/build.js
 
-run: build
+run: preTest
 	node build/build.js
-
-test: preTest run
 
 ## Dependencies
 
