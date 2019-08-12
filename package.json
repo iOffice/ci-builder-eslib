@@ -12,7 +12,7 @@
   "author": "iOFFICE Team",
   "license": "MIT",
   "devDependencies": {
-    "@ioffice/fp": "0.0.0-SNAPSHOT.79fd5033c5bbc1a30a3c47f922b316c3655cfd0e",
+    "@ioffice/fp": "0.0.1",
     "@types/chai": "4.1.7",
     "@types/colors": "1.2.1",
     "@types/eslint": "4.16.6",
@@ -40,6 +40,7 @@
     "typescript": "3.5.3"
   },
   "peerDependencies": {
+    "@ioffice/fp": "0.x",
     "@typescript-eslint/eslint-plugin": "1.x",
     "@typescript-eslint/parser": "1.x",
     "colors": "1.x",
