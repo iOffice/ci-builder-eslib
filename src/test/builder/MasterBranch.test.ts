@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 import { checkLogs, Builder, makeBuilder } from './Helper';
 import { util, StepResult } from '../../main';
-import { Left } from '../../main/fp';
+import { Left } from '@ioffice/fp';
 import { default as mockedEnv } from 'mocked-env';
 import { assert, expect } from 'chai';
 

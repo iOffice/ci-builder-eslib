@@ -14,7 +14,7 @@ import {
   Success,
   TryAsync,
   pipeEither,
-} from '../fp';
+} from '@ioffice/fp';
 import {
   Exception,
   IException,

@@ -1,4 +1,4 @@
-import { Option, Maybe } from '../../fp';
+import { Option, Maybe } from '@ioffice/fp';
 
 /**
  * Main package information.

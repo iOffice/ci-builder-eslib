@@ -16,7 +16,7 @@ import {
   BStep,
 } from './Types';
 import { Exception } from '../util';
-import { Either, ifElseChain, Right, asyncPipeEither } from '../fp';
+import { Either, ifElseChain, Right, asyncPipeEither } from '@ioffice/fp';
 
 /**
  * The `CIBuilder` defines the basic flows to run under a CI environment and

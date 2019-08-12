@@ -12,6 +12,7 @@
   "author": "iOFFICE Team",
   "license": "MIT",
   "devDependencies": {
+    "@ioffice/fp": "0.0.0-SNAPSHOT.79fd5033c5bbc1a30a3c47f922b316c3655cfd0e",
     "@types/chai": "4.1.7",
     "@types/colors": "1.2.1",
     "@types/eslint": "4.16.6",
