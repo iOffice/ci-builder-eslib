@@ -18,6 +18,11 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
+"@ioffice/fp@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@ioffice/fp/-/fp-0.0.1.tgz#bc3586bec15e706bf81536890ca9bfebbacf9d52"
+  integrity sha512-/4hgqgRa5p6q9Y+ujBL8fxdojSsd/pwEkF2bMK8s/No9DYTfuBzxciFrbBFRLYhpVd17bcIw1hFhMxHX9uV+ug==
+
 "@sinonjs/commons@^1", "@sinonjs/commons@^1.0.2", "@sinonjs/commons@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.4.0.tgz#7b3ec2d96af481d7a0321252e7b1c94724ec5a78"

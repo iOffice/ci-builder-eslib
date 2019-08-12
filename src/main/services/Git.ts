@@ -1,5 +1,5 @@
 import { IO } from './IO';
-import { Either, asyncPipeEither } from '../fp';
+import { Either, asyncPipeEither } from '@ioffice/fp';
 import { Exception, util } from '../util';
 
 class Git {

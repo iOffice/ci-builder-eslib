@@ -7,7 +7,7 @@ import { IO } from './IO';
 import { Git } from './Git';
 import { Github } from './Github';
 import { StepResult } from '../builders';
-import { Either, Left, Right, asyncPipeEither } from '../fp';
+import { Either, Left, Right, asyncPipeEither } from '@ioffice/fp';
 import { Exception, util } from '../util';
 
 class BuildUtil {

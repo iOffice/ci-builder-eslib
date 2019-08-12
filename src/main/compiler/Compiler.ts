@@ -14,7 +14,7 @@ import {
   ITSMessage,
   MessageCategory,
 } from './Types';
-import { ifElseChain, Maybe, None, Option } from '../fp';
+import { ifElseChain, Maybe, None, Option } from '@ioffice/fp';
 import { Exception, ICompileConfig } from '../util';
 
 function getDiagnosticCategory(

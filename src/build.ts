@@ -11,7 +11,7 @@ import {
   Exception,
   util,
 } from './main';
-import { Left, Right, Maybe, asyncPipeEither, Either } from './main/fp';
+import { Left, Right, Maybe, asyncPipeEither, Either } from '@ioffice/fp';
 
 class Builder extends CIBuilder {
   readonly releaseBranchMerged = /^Merge pull request #(\d+) from (.*)\/release(.*)/;

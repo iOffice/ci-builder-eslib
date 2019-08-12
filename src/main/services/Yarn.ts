@@ -1,6 +1,6 @@
 import { IO } from './IO';
 import { Exception, util } from '../util';
-import { Either, Maybe, asyncPipeEither, Try, Success, Failure } from '../fp';
+import { Either, Maybe, asyncPipeEither, Try, Success, Failure } from '@ioffice/fp';
 import { StepResult } from '../builders';
 import { Environment } from './Environment';
 

@@ -3,7 +3,7 @@ import * as http from 'request-promise-native';
 import { Environment } from './Environment';
 import { IO } from './IO';
 import { Exception } from '../util';
-import { Either, TryAsync } from '../fp';
+import { Either, TryAsync } from '@ioffice/fp';
 
 class Github {
   readonly baseUrl: string;

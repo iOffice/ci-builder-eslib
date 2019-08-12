@@ -1,4 +1,4 @@
-import { Either } from '../fp';
+import { Either } from '@ioffice/fp';
 import { Exception } from '../util';
 
 /**

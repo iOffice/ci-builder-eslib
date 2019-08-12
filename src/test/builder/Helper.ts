@@ -16,7 +16,7 @@ import {
   Yarn,
 } from '../../main/services';
 import { Exception } from '../../main';
-import { Either, Right } from '../../main/fp';
+import { Either, Right } from '@ioffice/fp';
 
 function checkLogs(log: sinon.SinonSpy, calls: string[][]): void {
   assert.deepStrictEqual(log.args, calls);

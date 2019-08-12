@@ -4,7 +4,7 @@ import { IBuilderMessages, Provider } from '../services';
 import { IAction, IField, IAttachment } from './Types';
 import { StepResult } from '../builders';
 import { Exception } from '../util';
-import { Either, Option, TryAsync, Some, None } from '../fp';
+import { Either, Option, TryAsync, Some, None } from '@ioffice/fp';
 
 /**
  * Service to send slack messages. For this to work there needs to be

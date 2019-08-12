@@ -2,7 +2,7 @@ import * as sinon from 'sinon';
 import * as colors from 'colors';
 import { checkLogs, Builder, makeBuilder } from './Helper';
 import { util, StepResult } from '../../main';
-import { Left, Right } from '../../main/fp';
+import { Left, Right } from '@ioffice/fp';
 
 import { default as mockedEnv } from 'mocked-env';
 import { assert, expect } from 'chai';

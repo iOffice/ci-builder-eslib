@@ -21,7 +21,7 @@ import {
   pipeEither,
   Right,
   Left,
-} from '../fp';
+} from '@ioffice/fp';
 import { Exception, util } from '../util';
 
 /**

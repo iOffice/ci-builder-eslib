@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { compileCLI } from '../compiler';
 import { IParsedArgV, Exception, util } from '../util';
-import { Maybe } from '../fp';
+import { Maybe } from '@ioffice/fp';
 
 let exitNumber = 0;
 

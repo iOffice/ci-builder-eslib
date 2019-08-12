@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Suite } from 'mocha';
 
 import { ExitCode, compileProject, getProjectStatus } from '../main';
-import { Some } from '../main/fp';
+import { Some } from '@ioffice/fp';
 
 describe('Compiler', function compilerTest(this: Suite) {
   this.timeout(5000);

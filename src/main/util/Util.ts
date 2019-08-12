@@ -21,7 +21,7 @@ import {
   Failure,
   Left,
   Maybe,
-} from '../fp';
+} from '@ioffice/fp';
 import { Exception } from './Exception';
 import { IParsedArgV, IArgV } from './Types';
 
