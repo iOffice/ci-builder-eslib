@@ -1,4 +1,5 @@
 import { CISlack } from './CISlack';
+import { Maybe } from '@ioffice/fp';
 
 class TravisSlack extends CISlack {
   getTitle(): string {
@@ -6,7 +7,10 @@ class TravisSlack extends CISlack {
     const buildType = this.getBuildType()
       .map(x => ` ${x}`)
       .getOrElse('');
-    return `${repo} [Travis${buildType} Build #${buildNumber}]`;
+    const nodeVersion = Maybe(process.env['TRAVIS_NODE_VERSION'])
+      .map(ver => ` - Node ${ver}`)
+      .getOrElse('');
+    return `${repo} [Travis${buildType} Build #${buildNumber}${nodeVersion}]`;
   }
 
   getTitleLink(): string {
