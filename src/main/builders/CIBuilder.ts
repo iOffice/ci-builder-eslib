@@ -245,7 +245,7 @@ abstract class CIBuilder {
    * @param branch
    * @param commitMsg
    */
-  abstract isRelease(branch: string, commitMsg: string): boolean;
+  abstract isRelease(branch: string, commitMsg: string): Promise<boolean>;
 
   /**
    * State if the PR should be treated as a release verification or not. This
@@ -254,7 +254,7 @@ abstract class CIBuilder {
    *
    * @param pullRequestBranch The branch name of the PR.
    */
-  abstract isReleasePullRequest(pullRequestBranch: string): boolean;
+  abstract isReleasePullRequest(pullRequestBranch: string): Promise<boolean>;
 
   /**
    * Verifies that there the file list is empty.
@@ -373,7 +373,7 @@ abstract class CIBuilder {
   protected async handleBranch(): Promise<StepResult> {
     const { targetBranch: branch, commitMessage } = this.env;
     this.io.log(`New changes on '${branch}' branch.`);
-    if (!this.isRelease(branch, commitMessage)) {
+    if (!(await this.isRelease(branch, commitMessage))) {
       const msg = JSON.stringify(commitMessage);
       return this.io.log(
         `Skipping release on '${branch}' branch.\nLast commit message: ${msg}`,
@@ -403,7 +403,9 @@ abstract class CIBuilder {
 
   protected async handlePullRequest(): Promise<Either<Exception, 0>> {
     this.io.log('Handling pull request');
-    const isReleasePR = this.isReleasePullRequest(this.env.pullRequestBranch);
+    const isReleasePR = await this.isReleasePullRequest(
+      this.env.pullRequestBranch,
+    );
     const verificationType = isReleasePR
       ? BStep.verifyRelease
       : BStep.verifyNonRelease;

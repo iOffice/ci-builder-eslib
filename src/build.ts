@@ -1,6 +1,7 @@
 import * as semver from 'semver';
 import * as Mocha from 'mocha';
 import * as colors from 'colors';
+import { SemVer } from 'semver';
 
 import {
   CIBuilder,
@@ -11,17 +12,39 @@ import {
   Exception,
   util,
 } from './main';
-import { Left, Right, Maybe, asyncPipeEither, Either } from '@ioffice/fp';
+import {
+  Left,
+  Right,
+  Maybe,
+  asyncPipeEither,
+  None,
+  Either,
+  Option,
+} from '@ioffice/fp';
 
 class Builder extends CIBuilder {
   readonly releaseBranchMerged = /^Merge pull request #(\d+) from (.*)\/release(.*)/;
 
-  isRelease(branch: string, commitMsg: string): boolean {
+  async isRelease(branch: string, commitMsg: string): Promise<boolean> {
     const isMasterBranch = ['master', 'refs/heads/master'].includes(branch);
-    return isMasterBranch && !!commitMsg.match(this.releaseBranchMerged);
+    // Only releasing for node version 8
+    const isNode8 = (await util.exec('node --version'))
+      .fold(
+        err => {
+          this.io.warn(new Exception(`node --version error: ${err}`));
+          return None as Option<SemVer>;
+        },
+        ver => Maybe(semver.parse(ver)),
+      )
+      .map(ver => ver.major === 8)
+      .getOrElse(false);
+
+    return (
+      isNode8 && isMasterBranch && !!commitMsg.match(this.releaseBranchMerged)
+    );
   }
 
-  isReleasePullRequest(pullRequestBranch: string): boolean {
+  async isReleasePullRequest(pullRequestBranch: string): Promise<boolean> {
     return pullRequestBranch === 'release';
   }
 
