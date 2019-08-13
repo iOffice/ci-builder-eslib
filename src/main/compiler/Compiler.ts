@@ -305,7 +305,9 @@ function compileCLI(config: ICompileConfig): ExitCode {
       ),
     );
     io.error(
-      new Exception(formatFailureMessage(projectStatus, projectResults)),
+      new Exception(
+        formatFailureMessage(projectStatus, projectResults, tsconfigPath),
+      ),
     );
     if (dumpMessages) {
       io.dumpMessages();
