@@ -13,9 +13,20 @@ As per semantic versioning
 
 ## [Unreleased]
 
+## [0.1.0] - August 12, 2019
+*Breaking Changes*
+- Removed fp tools. It is now a peer dependency.
+- `isRelease` and `isReleasePullRequest` are now asynchronous.
+
+*Features*
+- Added `getNodeVersion` to the buildUtil service. Useful to prevent multiple builds from
+  attempting to release at the same time.
+
+
 ## [0.0.1] - August 10, 2019
 - Migrated tc-builder modified source code to this project.
 
 
-[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.0.1...HEAD
+[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.0.1...0.1.0
 [0.0.1]: https://github.com/iOffice/ci-builder-eslib/compare/feda23fef09b15cae64ba9bece252f145ecbb974...0.0.1
