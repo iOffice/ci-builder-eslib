@@ -75,14 +75,14 @@ class Builder extends CIBuilder {
     .stub(this.git, 'getModifiedFiles')
     .callsFake(async () => Right([]));
 
-  isRelease(branch: string, commitMsg: string): boolean {
+  async isRelease(branch: string, commitMsg: string): Promise<boolean> {
     return (
       branch === 'master' &&
       !!commitMsg.match(/^Merge pull request #(\d+) from (.*)\/release(.*)/)
     );
   }
 
-  isReleasePullRequest(pullRequestBranch: string): boolean {
+  async isReleasePullRequest(pullRequestBranch: string): Promise<boolean> {
     return pullRequestBranch === 'release';
   }
 

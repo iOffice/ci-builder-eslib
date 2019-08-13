@@ -7,7 +7,15 @@ import { IO } from './IO';
 import { Git } from './Git';
 import { Github } from './Github';
 import { StepResult } from '../builders';
-import { Either, Left, Right, asyncPipeEither } from '@ioffice/fp';
+import {
+  Either,
+  Left,
+  Right,
+  asyncPipeEither,
+  Option,
+  Maybe,
+  None,
+} from '@ioffice/fp';
 import { Exception, util } from '../util';
 
 class BuildUtil {
@@ -18,6 +26,22 @@ class BuildUtil {
     private github: Github,
     private yarn: Yarn,
   ) {}
+
+  /**
+   * Obtain the node version currently running.
+   * @param warn If `true`, a warning will display if the operation failed.
+   */
+  async getNodeVersion(warn: boolean = true): Promise<Option<SemVer>> {
+    return (await util.exec('node --version')).fold(
+      err => {
+        if (warn) {
+          this.io.warn(new Exception(`node --version error: ${err}`));
+        }
+        return None as Option<SemVer>;
+      },
+      ver => Maybe(semver.parse(ver)),
+    );
+  }
 
   /**
    * Verify that the package version has not been modified. It does this by
