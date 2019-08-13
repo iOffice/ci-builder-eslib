@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true
+  }
+}

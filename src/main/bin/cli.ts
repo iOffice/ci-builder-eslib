@@ -82,12 +82,12 @@ const main = async (): Promise<void> => {
       log(pkg['version']);
     });
   } else {
-    util.readJSON('./package.json', '.').fold(
+    const definitions = (parsedArgs.value as IParsedArgV).definitions;
+    util.readJSON(definitions['tsconfigPath'], '.').fold(
       err => error(err),
-      (projectPkg: object) => {
-        const builderOptions = projectPkg['ciBuilder'] || {};
+      (config: object) => {
+        const builderOptions = config['ciBuilder'] || {};
         const messageMap = builderOptions['allowed'] || {};
-        const definitions = (parsedArgs.value as IParsedArgV).definitions;
         exitNumber = compileCLI({
           messageMap,
           ci,
