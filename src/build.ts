@@ -1,7 +1,6 @@
 import * as semver from 'semver';
 import * as Mocha from 'mocha';
 import * as colors from 'colors';
-import { SemVer } from 'semver';
 
 import {
   CIBuilder,
@@ -12,30 +11,15 @@ import {
   Exception,
   util,
 } from './main';
-import {
-  Left,
-  Right,
-  Maybe,
-  asyncPipeEither,
-  None,
-  Either,
-  Option,
-} from '@ioffice/fp';
+import { Left, Right, Maybe, asyncPipeEither, Either } from '@ioffice/fp';
 
 class Builder extends CIBuilder {
   readonly releaseBranchMerged = /^Merge pull request #(\d+) from (.*)\/release(.*)/;
 
   async isRelease(branch: string, commitMsg: string): Promise<boolean> {
     const isMasterBranch = ['master', 'refs/heads/master'].includes(branch);
-    // Only releasing for node version 8
-    const isNode8 = (await util.exec('node --version'))
-      .fold(
-        err => {
-          this.io.warn(new Exception(`node --version error: ${err}`));
-          return None as Option<SemVer>;
-        },
-        ver => Maybe(semver.parse(ver)),
-      )
+    // Only running the release build in node 8
+    const isNode8 = (await this.buildUtil.getNodeVersion())
       .map(ver => ver.major === 8)
       .getOrElse(false);
 
