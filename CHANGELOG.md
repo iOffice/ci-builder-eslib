@@ -13,6 +13,15 @@ As per semantic versioning
 
 ## [Unreleased]
 
+## [0.2.0] - August 13, 2019
+*Breaking Changes*
+- `ioffice-tsc` no longer looks for allowed errors in `package.json`. Instead it looks for them
+  in the tsconfig file which was used as an argument.
+
+*Features*
+- `tsconfig.core.ts` provides a basic configuration for typescript projects.
+
+
 ## [0.1.0] - August 12, 2019
 *Breaking Changes*
 - Removed fp tools. It is now a peer dependency.
@@ -27,6 +36,7 @@ As per semantic versioning
 - Migrated tc-builder modified source code to this project.
 
 
-[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.0.1...0.1.0
 [0.0.1]: https://github.com/iOffice/ci-builder-eslib/compare/feda23fef09b15cae64ba9bece252f145ecbb974...0.0.1
