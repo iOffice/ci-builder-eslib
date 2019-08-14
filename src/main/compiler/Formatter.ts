@@ -260,9 +260,10 @@ function formatProjectResults(
 function formatFailureMessage(
   projectStatus: IProjectStatus,
   projectResults: IProjectResults,
+  tsconfig: string,
 ): string {
   if (projectStatus.status === ExitCode.NEEDS_READJUSTMENT) {
-    return `Number of allowed messages need to be lowered in \`package.json\``;
+    return `Number of allowed messages need to be lowered in \`${tsconfig}\``;
   }
 
   const formatItem = (itemName: string, itemCount: number): string => {
