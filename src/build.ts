@@ -11,7 +11,7 @@ import {
   Exception,
   util,
 } from './main';
-import { Left, Right, Maybe, asyncPipeEither, Either } from '@ioffice/fp';
+import { Left, Right, Maybe, asyncEvalIteration, Either } from '@ioffice/fp';
 
 class Builder extends CIBuilder {
   readonly releaseBranchMerged = /^Merge pull request #(\d+) from (.*)\/release(.*)/;
@@ -82,12 +82,11 @@ class Builder extends CIBuilder {
       const majorEither = Maybe(semver.parse(version))
         .map(x => x.major)
         .toRight(new Exception(`Unable to parse version: ${version}`));
-      return asyncPipeEither(
-        () => majorEither,
-        () => this.git.getCurrentCommit(),
-        ([major, commit]) => Right(`${major}.0.0-SNAPSHOT.${commit}`),
-        ([, , ver]) => Right([ver, 'snapshot']),
-      );
+      return asyncEvalIteration(async () => {
+        for (const major of majorEither)
+          for (const commit of await this.git.getCurrentCommit())
+            return [`${major}.0.0-SNAPSHOT.${commit}`, 'snapshot'];
+      });
     }
     return Right([version, 'latest']);
   }
@@ -97,19 +96,19 @@ class Builder extends CIBuilder {
    */
   async publish(): Promise<StepResult> {
     const name = this.env.packageName;
-    return asyncPipeEither(
-      () => this.getPublishInfo(),
-      ([[version, tag]]) => this.yarn.publish(version, tag),
-      ([[version, tag]]) =>
-        this.io.success(
-          0,
-          [
-            '\nRun:',
-            colors.green(`  yarn add ${name}@${tag} -E -D`),
-            `  to install ${name}@${colors.blue(version)}\n`,
-          ].join('\n'),
-        ),
-    );
+    return asyncEvalIteration(async () => {
+      for (const [version, tag] of await this.getPublishInfo())
+        for (let _ of await this.yarn.publish(version, tag))
+          for (let _ of await this.io.success(
+            0,
+            [
+              '\nRun:',
+              colors.green(`  yarn add ${name}@${tag} -E -D`),
+              `  to install ${name}@${colors.blue(version)}\n`,
+            ].join('\n'),
+          ))
+            return 0;
+    });
   }
 
   /**
@@ -121,11 +120,13 @@ class Builder extends CIBuilder {
 
   releaseSetup(param: IReleaseInfo): Promise<StepResult> {
     const { currentVersion: ver, newVersion: newVer } = param;
-    return asyncPipeEither(
-      _ => util.changePackageVersion(newVer),
-      _ => this.buildUtil.updateChangeLog(newVer),
-      _ => this.buildUtil.replaceVersionsInREADME(ver, newVer),
-    );
+    const bUtil = this.buildUtil;
+    return asyncEvalIteration(async () => {
+      for (let _ of util.changePackageVersion(newVer))
+        for (let _ of await bUtil.updateChangeLog(newVer))
+          for (let _ of await bUtil.replaceVersionsInREADME(ver, newVer))
+            return 0;
+    });
   }
 }
 
