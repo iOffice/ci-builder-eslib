@@ -11,7 +11,7 @@ import {
   Either,
   Left,
   Right,
-  asyncPipeEither,
+  asyncEvalIteration,
   Option,
   Maybe,
   None,
@@ -31,7 +31,7 @@ class BuildUtil {
    * Obtain the node version currently running.
    * @param warn If `true`, a warning will display if the operation failed.
    */
-  async getNodeVersion(warn: boolean = true): Promise<Option<SemVer>> {
+  async getNodeVersion(warn = true): Promise<Option<SemVer>> {
     return (await util.exec('node --version')).fold(
       err => {
         if (warn) {
@@ -54,9 +54,11 @@ class BuildUtil {
   async verifyUntouchedPackageVersion(): Promise<StepResult> {
     const pkgVersion = this.env.packageVersion;
 
-    const semVerEither = await asyncPipeEither(
-      _ => this.yarn.getVersion(),
-      ([version]) => util.toSemVer(version),
+    const semVerEither = await asyncEvalIteration<Exception, SemVer>(
+      async () => {
+        for (const version of await this.yarn.getVersion())
+          for (const semVersion of util.toSemVer(version)) return semVersion;
+      },
     );
 
     if (semVerEither.isLeft) return semVerEither.map(_ => 0 as 0);
@@ -84,9 +86,11 @@ class BuildUtil {
   async verifyNewPackageVersion(): Promise<StepResult> {
     const pkgVersion = this.env.packageVersion;
 
-    const semVerEither = await asyncPipeEither(
-      _ => this.yarn.getVersion(),
-      ([version]) => util.toSemVer(version),
+    const semVerEither = await asyncEvalIteration<Exception, SemVer>(
+      async () => {
+        for (const version of await this.yarn.getVersion())
+          for (const semVersion of util.toSemVer(version)) return semVersion;
+      },
     );
 
     if (semVerEither.isLeft) return semVerEither.map(_ => 0 as 0);
@@ -108,14 +112,18 @@ class BuildUtil {
    */
   async updateChangeLog(
     newVersion: string,
-    changeLogFile: string = './CHANGELOG.md',
+    changeLogFile = './CHANGELOG.md',
   ): Promise<StepResult> {
-    return asyncPipeEither(
-      _ => util.readFile(changeLogFile),
-      _ => this.git.getFirstCommit(),
-      ([data, commit]) => this.modifiedChangeLog(data, newVersion, commit),
-      ([, , newData]) => util.writeFile(newData, changeLogFile),
-    );
+    return asyncEvalIteration<Exception, 0>(async () => {
+      for (const data of await util.readFile(changeLogFile))
+        for (const commit of await this.git.getFirstCommit())
+          for (const newData of this.modifiedChangeLog(
+            data,
+            newVersion,
+            commit,
+          ))
+            for (const _ of util.writeFile(newData, changeLogFile)) return 0;
+    });
   }
 
   /**
@@ -132,14 +140,14 @@ class BuildUtil {
     newVersion: string,
   ): Promise<StepResult> {
     const readmeFile = './README.md';
-    return asyncPipeEither(
-      _ => util.readFile(readmeFile),
-      ([data]) =>
-        util.writeFile(
+    return asyncEvalIteration<Exception, 0>(async () => {
+      for (const data of util.readFile(readmeFile))
+        for (const _ of util.writeFile(
           this.modifiedREADME(data, currentVersion, newVersion),
           readmeFile,
-        ),
-    );
+        ))
+          return 0;
+    });
   }
 
   /**

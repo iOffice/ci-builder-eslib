@@ -13,7 +13,7 @@ import {
   Right,
   Success,
   TryAsync,
-  pipeEither,
+  evalIteration,
 } from '@ioffice/fp';
 import {
   Exception,
@@ -199,9 +199,10 @@ class IO {
   loadLogFile(): Either<Exception, IBuilderMessages> {
     return util
       .readJSON(this.logFile)
-      .swap()
-      .map(ex => new Exception('failed to load log file', ex))
-      .swap() as Either<Exception, IBuilderMessages>;
+      .mapIfLeft(ex => new Exception('failed to load log file', ex)) as Either<
+      Exception,
+      IBuilderMessages
+    >;
   }
 
   /**
@@ -209,17 +210,15 @@ class IO {
    */
   setLogFileReleaseFlag(): Either<Exception, 0> {
     const empty: IBuilderMessages = { errors: [], warnings: [] };
-    return pipeEither(
-      _ =>
-        this.loadLogFile().fold(
-          _ => Right(empty),
-          x => Right(x),
-        ),
-      ([data]) => {
+    return evalIteration<Exception, 0>(() => {
+      for (const data of this.loadLogFile().fold(
+        _ => Right(empty),
+        x => Right(x),
+      )) {
         data.isRelease = true;
-        return util.writeJSON(data, this.logFile);
-      },
-    );
+        for (const _ of util.writeJSON(data, this.logFile)) return 0;
+      }
+    });
   }
 
   /**
