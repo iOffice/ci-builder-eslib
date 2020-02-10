@@ -94,7 +94,7 @@ class IO {
   /**
    * Prints a message to the console and stores the error.
    */
-  error(err: Exception, dumpException: boolean = true): Either<Exception, 0> {
+  error(err: Exception, dumpException = true): Either<Exception, 0> {
     const msg = err.message;
     IO.errors.push([msg, Date.now()]);
     // prettier-ignore
@@ -210,7 +210,11 @@ class IO {
   setLogFileReleaseFlag(): Either<Exception, 0> {
     const empty: IBuilderMessages = { errors: [], warnings: [] };
     return pipeEither(
-      _ => this.loadLogFile().fold(_ => Right(empty), x => Right(x)),
+      _ =>
+        this.loadLogFile().fold(
+          _ => Right(empty),
+          x => Right(x),
+        ),
       ([data]) => {
         data.isRelease = true;
         return util.writeJSON(data, this.logFile);
