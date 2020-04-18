@@ -299,9 +299,9 @@ abstract class CIBuilder {
     const branchEither = await asyncEvalIteration<Exception, string>(
       async () => {
         for (const files of await this.git.getModifiedFiles())
-          for (let _ of await this.verifyNonCommittedFiles(files))
+          for (const _ of await this.verifyNonCommittedFiles(files))
             for (const branch of await this.git.getBranch())
-              for (let _ of await this.git.switchBranch('__build', true))
+              for (const _ of await this.git.switchBranch('__build', true))
                 return branch;
       },
     );
@@ -309,21 +309,25 @@ abstract class CIBuilder {
     // no point moving forward since we were unable to switch to build branch
     if (branchEither.isLeft) return branchEither.map(_ => 0 as 0);
 
-    const result = (await asyncEvalIteration<Exception, 0>(async () => {
-      for (let _ of await this.runStep(this.buildStep[BStep.beforePublish]))
-        for (let _ of await this.runStep(this.buildStep[BStep.publish]))
-          for (let _ of await this.io.success(0, 'Pre-release successful'))
-            return 0;
-    })).mapIfLeft(err => {
+    const result = (
+      await asyncEvalIteration<Exception, 0>(async () => {
+        for (const _ of await this.runStep(this.buildStep[BStep.beforePublish]))
+          for (const _ of await this.runStep(this.buildStep[BStep.publish]))
+            for (const _ of await this.io.success(0, 'Pre-release successful'))
+              return 0;
+      })
+    ).mapIfLeft(err => {
       this.io.error(err, false);
       return err;
     });
 
-    (await asyncEvalIteration<Exception, 0>(async () => {
-      for (const branch of branchEither)
-        for (let _ of await this.git.switchAndDelete(branch, '__build'))
-          return 0;
-    })).mapIfLeft(err => this.io.warn(err));
+    (
+      await asyncEvalIteration<Exception, 0>(async () => {
+        for (const branch of branchEither)
+          for (const _ of await this.git.switchAndDelete(branch, '__build'))
+            return 0;
+      })
+    ).mapIfLeft(err => this.io.warn(err));
 
     return result;
   }
@@ -347,20 +351,23 @@ abstract class CIBuilder {
     // TODO: lets make sure everything is pushed.
     await asyncEvalIteration(async () => {
       for (const currentBranch of await this.git.getBranch())
-        for (let _ of await this.requireBranch(currentBranch, 'master'))
-          for (let files of await this.git.getModifiedFiles())
-            for (let _ of await this.verifyNonCommittedFiles(files)) return 0;
+        for (const _ of await this.requireBranch(currentBranch, 'master'))
+          for (const files of await this.git.getModifiedFiles())
+            for (const _ of await this.verifyNonCommittedFiles(files)) return 0;
     });
 
     const currentVer = this.env.packageVersion;
     return asyncEvalIteration<Exception, 0>(async () => {
       for (const newVer of await this.io.promptForNewVersion(currentVer))
-        for (let _ of await this.git.switchBranch('release', true))
-          for (let _ of await this.runStep(this.buildStep[BStep.releaseSetup], {
-            currentVer,
-            newVer,
-          }))
-            for (let _ of this.io.log(`setup for version ${newVer} complete`))
+        for (const _ of await this.git.switchBranch('release', true))
+          for (const _ of await this.runStep(
+            this.buildStep[BStep.releaseSetup],
+            {
+              currentVer,
+              newVer,
+            },
+          ))
+            for (const _ of this.io.log(`setup for version ${newVer} complete`))
               return 0;
     });
   }
@@ -389,8 +396,8 @@ abstract class CIBuilder {
       .forEach(err => this.io.warn(err));
 
     const publishResult = await asyncEvalIteration<Exception, 0>(async () => {
-      for (let _ of await this.runStep(this.buildStep[BStep.beforePublish]))
-        for (let _ of await this.runStep(this.buildStep[BStep.publish]))
+      for (const _ of await this.runStep(this.buildStep[BStep.beforePublish]))
+        for (const _ of await this.runStep(this.buildStep[BStep.publish]))
           return 0;
     });
     if (publishResult.isLeft) return publishResult;
@@ -415,10 +422,10 @@ abstract class CIBuilder {
       : BStep.verifyNonRelease;
 
     const verifyResult = await asyncEvalIteration<Exception, 0>(async () => {
-      for (let _ of await this.runStep(
+      for (const _ of await this.runStep(
         this.buildStep[BStep.beforeVerifyPullRequest],
       ))
-        for (let _ of await this.runStep(this.buildStep[verificationType]))
+        for (const _ of await this.runStep(this.buildStep[verificationType]))
           return 0;
     });
     if (verifyResult.isLeft) return verifyResult;
