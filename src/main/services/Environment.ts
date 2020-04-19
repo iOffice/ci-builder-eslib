@@ -18,8 +18,7 @@ import {
   Try,
   Success,
   Failure,
-  pipeEither,
-  Right,
+  evalIteration,
   Left,
 } from '@ioffice/fp';
 import { Exception, util } from '../util';
@@ -250,34 +249,32 @@ class Environment {
   }
 
   private getPackageInfo(): Either<Exception, IPackageInfo> {
-    return pipeEither(
-      () => this.readPackage(),
-      ([pkg]) =>
-        Maybe((pkg as object)['name']).toRight(
+    return evalIteration<Exception, IPackageInfo>(() => {
+      for (const pkg of this.readPackage())
+        for (const name of Maybe((pkg as object)['name']).toRight(
           new Exception('package.json missing "name" field'),
-        ),
-      ([pkg]) =>
-        Maybe((pkg as object)['version']).toRight(
-          new Exception('package.json missing "version" field'),
-        ),
-      ([pkg]) => this.getRepoInfo(pkg as object),
-      ([pkg, name, version, repoInfo]) => {
+        ))
+          for (const version of this.getPackageVersion(pkg as object))
+            for (const [owner, repo] of this.getRepoInfo(pkg as object))
+              return { name, version, owner, repo, data: pkg };
+    });
+  }
+
+  private getPackageVersion(pkg: object): Either<Exception, string> {
+    return evalIteration(() => {
+      for (const version of Maybe(pkg['version']).toRight(
+        new Exception('package.json missing "version" field'),
+      )) {
         if (!semver.parse(version)) {
-          return Left(
+          throw Left(
             new Exception(
               `package.json "version" field is not parsable: ${version}`,
             ),
           );
         }
-        return Right({
-          name,
-          version,
-          owner: repoInfo[0],
-          repo: repoInfo[1],
-          data: pkg,
-        });
-      },
-    );
+        return version;
+      }
+    });
   }
 }
 

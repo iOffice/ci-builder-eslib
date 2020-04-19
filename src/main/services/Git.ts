@@ -1,5 +1,5 @@
 import { IO } from './IO';
-import { Either, asyncPipeEither } from '@ioffice/fp';
+import { Either, asyncEvalIteration } from '@ioffice/fp';
 import { Exception, util } from '../util';
 
 class Git {
@@ -56,7 +56,7 @@ class Git {
    */
   async switchBranch(
     branch: string,
-    isNew: boolean = false,
+    isNew = false,
   ): Promise<Either<Exception, string>> {
     const newFlag = isNew ? ' -b' : '';
     return (await util.exec(`git checkout${newFlag} ${branch} -q`)).fold(
@@ -97,12 +97,11 @@ class Git {
     toBranch: string,
     fromBranch: string,
   ): Promise<Either<Exception, boolean>> {
-    return asyncPipeEither(
-      _ => this.discardBranchChanges(),
-      _ => this.switchBranch(toBranch),
-      _ => this.deleteBranch(fromBranch),
-      _ => this.io.success(true),
-    );
+    return asyncEvalIteration(async () => {
+      for (const _ of await this.discardBranchChanges())
+        for (const _ of await this.switchBranch(toBranch))
+          for (const _ of await this.deleteBranch(fromBranch)) return true;
+    });
   }
 }
 

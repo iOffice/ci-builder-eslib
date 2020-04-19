@@ -14,13 +14,13 @@ import { SemVer } from 'semver';
 
 import {
   Either,
-  pipeEither,
   Right,
   Success,
   Try,
   Failure,
   Left,
   Maybe,
+  evalIteration,
 } from '@ioffice/fp';
 import { Exception } from './Exception';
 import { IParsedArgV, IArgV } from './Types';
@@ -174,16 +174,16 @@ const util = {
    * Returns either an exception or the parsed JSON contents of the file.
    */
   readJSON(name: string, path?: string): Either<Exception, unknown> {
-    return pipeEither(
-      () => util.readFile(name, path),
-      ([contents]) =>
-        Try(() => JSON.parse(contents))
+    return evalIteration(() => {
+      for (const contents of util.readFile(name, path))
+        for (const obj of Try(() => JSON.parse(contents))
           .transform(
             _ => Success(_),
             err => toFailure('failed to parse JSON file', err, { name, path }),
           )
-          .toEither(),
-    );
+          .toEither())
+          return obj;
+    });
   },
 
   /**
@@ -218,10 +218,10 @@ const util = {
         err => toFailure('failed to stringify contents', err),
       )
       .toEither() as Either<Exception, string>;
-    return pipeEither(
-      _ => strContent,
-      ([strContents]) => util.writeFile(strContents, name, path),
-    );
+    return evalIteration<Exception, 0>(() => {
+      for (const strContents of strContent)
+        for (const _ of util.writeFile(strContents, name, path)) return 0;
+    });
   },
 
   /**
@@ -230,7 +230,7 @@ const util = {
    */
   changePackageVersion(
     version: string,
-    filePath: string = './package.json',
+    filePath = './package.json',
   ): Either<Exception, 0> {
     const update = (contents: string): Either<Exception, string> => {
       const lines = contents.split('\n');
@@ -244,11 +244,11 @@ const util = {
           .join('\n'),
       ) as Either<Exception, string>;
     };
-    return pipeEither(
-      () => util.readFile(filePath),
-      ([contents]) => update(contents),
-      ([_, newContent]) => util.writeFile(newContent, filePath),
-    );
+    return evalIteration<Exception, 0>(() => {
+      for (const contents of util.readFile(filePath))
+        for (const newContent of update(contents))
+          for (const _ of util.writeFile(newContent, filePath)) return 0;
+    });
   },
 
   /**

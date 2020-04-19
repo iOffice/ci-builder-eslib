@@ -16,7 +16,7 @@ import {
   BStep,
 } from './Types';
 import { Exception } from '../util';
-import { Either, ifElseChain, Right, asyncPipeEither } from '@ioffice/fp';
+import { Either, ifElseChain, Right, asyncEvalIteration } from '@ioffice/fp';
 
 /**
  * The `CIBuilder` defines the basic flows to run under a CI environment and
@@ -296,31 +296,38 @@ abstract class CIBuilder {
    * to be kept in the down low.
    */
   protected async createPreRelease(): Promise<StepResult> {
-    const branchEither = await asyncPipeEither(
-      _ => this.git.getModifiedFiles(),
-      ([files]) => this.verifyNonCommittedFiles(files),
-      _ => this.git.getBranch(),
-      _ => this.git.switchBranch('__build', true),
-      arg => Right(arg[2]) as Either<Exception, string>,
+    const branchEither = await asyncEvalIteration<Exception, string>(
+      async () => {
+        for (const files of await this.git.getModifiedFiles())
+          for (const _ of await this.verifyNonCommittedFiles(files))
+            for (const branch of await this.git.getBranch())
+              for (const _ of await this.git.switchBranch('__build', true))
+                return branch;
+      },
     );
 
     // no point moving forward since we were unable to switch to build branch
     if (branchEither.isLeft) return branchEither.map(_ => 0 as 0);
 
-    const result = (await asyncPipeEither(
-      _ => this.runStep(this.buildStep[BStep.beforePublish]),
-      _ => this.runStep(this.buildStep[BStep.publish]),
-    )).fold<Promise<StepResult>>(
-      async err => this.io.error(err, false),
-      _ => this.io.success(0, 'Pre-release successful'),
-    );
+    const result = (
+      await asyncEvalIteration<Exception, 0>(async () => {
+        for (const _ of await this.runStep(this.buildStep[BStep.beforePublish]))
+          for (const _ of await this.runStep(this.buildStep[BStep.publish]))
+            for (const _ of await this.io.success(0, 'Pre-release successful'))
+              return 0;
+      })
+    ).mapIfLeft(err => {
+      this.io.error(err, false);
+      return err;
+    });
 
-    (await asyncPipeEither(
-      () => branchEither,
-      ([branch]) => this.git.switchAndDelete(branch, '__build'),
-    ))
-      .swap()
-      .forEach(err => this.io.warn(err));
+    (
+      await asyncEvalIteration<Exception, 0>(async () => {
+        for (const branch of branchEither)
+          for (const _ of await this.git.switchAndDelete(branch, '__build'))
+            return 0;
+      })
+    ).mapIfLeft(err => this.io.warn(err));
 
     return result;
   }
@@ -341,25 +348,28 @@ abstract class CIBuilder {
    * writing any remaining information to continue with the release process.
    */
   protected async runReleaseSetup(): Promise<StepResult> {
-    await asyncPipeEither(
-      _ => this.git.getBranch(),
-      ([currentBranch]) => this.requireBranch(currentBranch, 'master'),
-      _ => this.git.getModifiedFiles(),
-      arg => this.verifyNonCommittedFiles(arg[2]),
-      // TODO: lets make sure everything is pushed.
-    );
+    // TODO: lets make sure everything is pushed.
+    await asyncEvalIteration(async () => {
+      for (const currentBranch of await this.git.getBranch())
+        for (const _ of await this.requireBranch(currentBranch, 'master'))
+          for (const files of await this.git.getModifiedFiles())
+            for (const _ of await this.verifyNonCommittedFiles(files)) return 0;
+    });
 
-    const currentVersion = this.env.packageVersion;
-    return asyncPipeEither(
-      _ => this.io.promptForNewVersion(currentVersion),
-      _ => this.git.switchBranch('release', true),
-      ([newVersion]) =>
-        this.runStep(this.buildStep[BStep.releaseSetup], {
-          currentVersion,
-          newVersion,
-        }),
-      ([newVersion]) => this.io.log(`setup for version ${newVersion} complete`),
-    );
+    const currentVer = this.env.packageVersion;
+    return asyncEvalIteration<Exception, 0>(async () => {
+      for (const newVer of await this.io.promptForNewVersion(currentVer))
+        for (const _ of await this.git.switchBranch('release', true))
+          for (const _ of await this.runStep(
+            this.buildStep[BStep.releaseSetup],
+            {
+              currentVer,
+              newVer,
+            },
+          ))
+            for (const _ of this.io.log(`setup for version ${newVer} complete`))
+              return 0;
+    });
   }
 
   private async runBuilder(): Promise<StepResult> {
@@ -385,10 +395,11 @@ abstract class CIBuilder {
       .swap()
       .forEach(err => this.io.warn(err));
 
-    const publishResult = await asyncPipeEither(
-      _ => this.runStep(this.buildStep[BStep.beforePublish]),
-      _ => this.runStep(this.buildStep[BStep.publish]),
-    );
+    const publishResult = await asyncEvalIteration<Exception, 0>(async () => {
+      for (const _ of await this.runStep(this.buildStep[BStep.beforePublish]))
+        for (const _ of await this.runStep(this.buildStep[BStep.publish]))
+          return 0;
+    });
     if (publishResult.isLeft) return publishResult;
 
     const version = this.env.packageVersion;
@@ -410,10 +421,13 @@ abstract class CIBuilder {
       ? BStep.verifyRelease
       : BStep.verifyNonRelease;
 
-    const verifyResult = await asyncPipeEither(
-      _ => this.runStep(this.buildStep[BStep.beforeVerifyPullRequest]),
-      _ => this.runStep(this.buildStep[verificationType]),
-    );
+    const verifyResult = await asyncEvalIteration<Exception, 0>(async () => {
+      for (const _ of await this.runStep(
+        this.buildStep[BStep.beforeVerifyPullRequest],
+      ))
+        for (const _ of await this.runStep(this.buildStep[verificationType]))
+          return 0;
+    });
     if (verifyResult.isLeft) return verifyResult;
 
     (await this.runStep(this.buildStep[BStep.afterVerifyPullRequest]))

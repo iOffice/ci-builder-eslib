@@ -1,6 +1,13 @@
 import { IO } from './IO';
 import { Exception, util } from '../util';
-import { Either, Maybe, asyncPipeEither, Try, Success, Failure } from '@ioffice/fp';
+import {
+  Either,
+  Maybe,
+  asyncEvalIteration,
+  Try,
+  Success,
+  Failure,
+} from '@ioffice/fp';
 import { StepResult } from '../builders';
 import { Environment } from './Environment';
 
@@ -20,10 +27,7 @@ class Yarn {
    * @param newVersion The version to publish.
    * @param tag defaults to latest.
    */
-  async publish(
-    newVersion: string,
-    tag: string = 'latest',
-  ): Promise<StepResult> {
+  async publish(newVersion: string, tag = 'latest'): Promise<StepResult> {
     this.io.openBlock('yarn-publish', 'publishing');
     const result = await util.execCmd(
       `yarn publish --new-version ${newVersion} --tag ${tag}`,
@@ -40,22 +44,19 @@ class Yarn {
    * wrapper for `npm whoami`. Uses the registry specified in the package.
    */
   async whoami(): Promise<Either<Exception, string>> {
-    const registryEither = Maybe(this.env.package as object)
-      .map(x => x['publishConfig'])
-      .map(x => x['registry'])
-      .toRight(new Exception('missing publishConfig.registry in package.json'));
-    return asyncPipeEither(
-      () => registryEither,
-      async ([registry]) =>
-        (await util.exec(`npm whoami --registry ${registry}`)).fold(
-          err =>
-            this.io.failure<string>({
-              message: 'npm whoami failure',
-              data: err,
-            }),
-          val => this.io.success(val.trim()),
-        ),
+    const pkg = this.env.package as object;
+    const registryEither = Maybe(pkg?.['publishConfig']?.['registry']).toRight(
+      new Exception('missing publishConfig.registry in package.json'),
     );
+    return asyncEvalIteration<Exception, string>(async () => {
+      for (const registry of registryEither)
+        for (const val of (
+          await util.exec(`npm whoami --registry ${registry}`)
+        ).mapIfLeft(
+          err => new Exception({ message: 'npm whoami failure', data: err }),
+        ))
+          return val.trim();
+    });
   }
 
   /**
