@@ -14,7 +14,7 @@ As per semantic versioning
 ## [Unreleased]
 
 
-## [0.3.1] - April 19, 2020
+## [0.3.2] - April 19, 2020
 - Everything should still be the same. libraries were updated in the project
   to remove dependencies and to make the code a bit easier to read.
 - Versions `0.3.0` and `0.3.1` are the same as this one except that they did not get tagged in
