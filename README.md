@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.com/iOffice/ci-builder-eslib.svg?branch=master)](https://travis-ci.com/iOffice/ci-builder-eslib)
 
 CIBuilder is a tool to help us specify the build process within the node environment. It does this
-by providing a single point of entry which branches off depending on the defined methods and 
+by providing a single point of entry which branches off depending on the defined methods and
 environment variables found in the ci tool.
 
 ## Installation
@@ -110,7 +110,7 @@ The builder will always run this step and stop the build if there are any errors
 
 ### isPR
 
-This part is determined by the ci tool. The `Environment` service provides the variable 
+This part is determined by the ci tool. The `Environment` service provides the variable
 `pullRequestBranch`. If this is a non-empty string then we are building a pull request.
 
 ### beforeVerifyPullRequest
@@ -139,7 +139,7 @@ This can be used to verify that the package version has not been changed.
 
 This step will not halt the execution regardless of the outcome. Although this sounds like the
 perfect opportunity to send a notification, it is not recommended to do so. This is because it is
-not guaranteed that the code will execute. This method serves more of a verification that all the 
+not guaranteed that the code will execute. This method serves more of a verification that all the
 checks have passed. A notification should be sent via a hook provided by the ci tool. In the case of
 [travis-ci](https://docs.travis-ci.com/user/job-lifecycle/), it is recommended to send a
 notification on the `after_script` step since this will execute regardless of failure or success.
@@ -191,7 +191,7 @@ Getting rid of these errors is a non-trivial task because making sure we initial
 stating that the property could be undefined makes the compiler tell us about other possible errors.
 
 To stop introducing errors of the same type we have to communicate that it is okay to allow a
-certain number of errors. This can be done by adding the following entry to `package.json`:
+certain number of errors. This can be done by adding the following entry to the `tsconfig.json`:
 
 ```json
 {
@@ -205,8 +205,8 @@ certain number of errors. This can be done by adding the following entry to `pac
 ```
 
 The idea is to add rules that we wish we can start respecting without having to worry about
-cleaning everything up in one go. When a developer manages to remove several errors then the 
-`package.json` file is updated to reflect the current number of errors. Once all the errors are gone
+cleaning everything up in one go. When a developer manages to remove several errors then the
+`tsconfig.json` file is updated to reflect the current number of errors. Once all the errors are gone
 we can remove the `ciBuilder` entry and move on with our sanitized project. That is, until
 typescript comes out with a very good flag that will result in lots errors.
 
