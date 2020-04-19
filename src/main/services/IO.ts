@@ -79,7 +79,7 @@ class IO {
   /**
    * Print a message of an Exception to the console and store the warning.
    */
-  warn(err: Exception): Either<Exception, 0> {
+  warn(err: Exception, dumpException = true): Either<Exception, 0> {
     const msg = err.message;
     IO.warnings.push([msg, Date.now()]);
     // prettier-ignore
@@ -87,6 +87,9 @@ class IO {
       [CI.TEAMCITY, _ => `##teamcity[message text='${this.escapeTC(msg)}' status='WARNING']`],
       [CI.TRAVIS, _ => `##buildWarning: ${msg}`],
     ).getOrElse(colors.yellow('WARNING: ') + msg);
+    if (dumpException) {
+      this.log(JSON.stringify(err.toObject(), null, 2));
+    }
     return this.log(line);
   }
 
