@@ -360,11 +360,11 @@ abstract class CIBuilder {
     return asyncEvalIteration<Exception, 0>(async () => {
       for (const newVer of await this.io.promptForNewVersion(currentVer))
         for (const _ of await this.git.switchBranch('release', true))
-          for (const _ of await this.runStep(
+          for (const _ of await this.runStep<IReleaseInfo>(
             this.buildStep[BStep.releaseSetup],
             {
-              currentVer,
-              newVer,
+              currentVersion: currentVer,
+              newVersion: newVer,
             },
           ))
             for (const _ of this.io.log(`setup for version ${newVer} complete`))
