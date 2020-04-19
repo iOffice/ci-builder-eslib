@@ -1,40 +1,35 @@
-import * as http from 'request-promise-native';
-
+import { Either } from '@ioffice/fp';
 import { Environment } from './Environment';
 import { IO } from './IO';
 import { Exception } from '../util';
-import { Either, TryAsync } from '@ioffice/fp';
+import { fetch } from './Fetch';
 
 class Github {
-  readonly baseUrl: string;
-
-  constructor(private env: Environment, private io: IO) {
-    this.baseUrl = `https://api.github.com/repos/${env.owner}/${env.repo}`;
-  }
+  constructor(private env: Environment, private io: IO) {}
 
   async request(
     endpoint: string,
-    method: string = 'GET',
+    method = 'GET',
     body: unknown = null,
   ): Promise<Either<Exception, unknown>> {
-    const options = {
-      method,
-      uri: `${this.baseUrl}/${endpoint}`,
-      // prettier-ignore
-      qs: { 'access_token': this.env.githubToken },
-      headers: { 'User-Agent': 'iOffice-TCBuilder' },
-      json: true,
+    const { owner, repo, githubToken } = this.env;
+    const headers = {
+      authorization: `Bearer ${githubToken}`,
     };
-    if (body) {
-      options['body'] = body;
-    }
-
-    return (await TryAsync(_ => http(options).promise())).toEither();
+    return fetch(
+      'https',
+      'api.github.com',
+      `/${owner}/${repo}${endpoint}`,
+      {},
+      headers,
+      method,
+      body,
+    );
   }
 
   async createRelease(
-    changeLogFile: string = 'CHANGELOG.md',
-    versionPrefix: string = 'Version ',
+    changeLogFile = 'CHANGELOG.md',
+    versionPrefix = 'Version ',
   ): Promise<Either<Exception, 0>> {
     const version = this.env.packageVersion;
     const owner = this.env.owner;
