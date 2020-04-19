@@ -14,10 +14,10 @@ As per semantic versioning
 ## [Unreleased]
 
 
-## [0.3.2] - April 19, 2020
+## [0.3.3] - April 19, 2020
 - Everything should still be the same. libraries were updated in the project
   to remove dependencies and to make the code a bit easier to read.
-- Versions `0.3.0` and `0.3.1` are the same as this one except that they did not get tagged in
+- Versions `0.3.0` to `0.3.2` are the same as this one except that they did not get tagged in
   github.
 
 
@@ -44,7 +44,8 @@ As per semantic versioning
 - Migrated tc-builder modified source code to this project.
 
 
-[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.3.2...HEAD
+[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.3.3...HEAD
+[0.3.3]: https://github.com/iOffice/ci-builder-eslib/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/iOffice/ci-builder-eslib/compare/0.2.0...0.3.2
 [0.2.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.0.1...0.1.0
