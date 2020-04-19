@@ -1,5 +1,4 @@
 import * as colors from 'colors';
-import * as inquirer from 'inquirer';
 import * as semver from 'semver';
 import { SemVer } from 'semver';
 
@@ -257,6 +256,11 @@ class IO {
     const newMinor = parseVer().map(x => x.inc('minor').version);
     const newMajor = parseVer().map(x => x.inc('major').version);
 
+    // releaseSetup needs to be moved to its own script. For now making
+    // inquierer being imported here so that node only loads it if when its
+    // needed.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const inquirer = require('inquirer');
     const result = await TryAsync(_ =>
       inquirer.prompt([
         {

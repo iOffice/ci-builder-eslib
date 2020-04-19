@@ -8,7 +8,7 @@ import { Exception } from '../util';
  */
 async function runBuilder(
   Builder: IBuilder,
-  dumpMessages: boolean = true,
+  dumpMessages = true,
 ): Promise<IProgramExitCode> {
   const builder = new Builder();
   builder.io.enableLocalBlocks();

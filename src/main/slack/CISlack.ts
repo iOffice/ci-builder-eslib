@@ -1,10 +1,9 @@
-import * as http from 'request-promise-native';
-
 import { IBuilderMessages, Provider } from '../services';
 import { IAction, IField, IAttachment } from './Types';
 import { StepResult } from '../builders';
 import { Exception } from '../util';
-import { Either, Option, TryAsync, Some, None } from '@ioffice/fp';
+import { Either, Option, Some, None } from '@ioffice/fp';
+import { fetch } from '../services/Fetch';
 
 /**
  * Service to send slack messages. For this to work there needs to be
@@ -162,18 +161,18 @@ abstract class CISlack {
       // prettier-ignore
       'as_user': true
     };
-    const options = {
-      method: 'POST',
-      uri: 'https://slack.com/api/chat.postMessage',
-      headers: {
-        'User-Agent': 'iOFFICE-CIBuilder',
-        'Content-Type': 'application/json; charset=utf-8',
-        Authorization: `Bearer ${token}`,
-      },
-      json: true,
-      body,
+    const headers = {
+      authorization: `Bearer ${token}`,
     };
-    return (await TryAsync(_ => http(options).promise())).toEither();
+    return fetch(
+      'https',
+      'slack.com',
+      `/api/chat.postMessage`,
+      {},
+      headers,
+      'POST',
+      body,
+    );
   }
 }
 
