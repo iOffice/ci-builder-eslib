@@ -24,6 +24,11 @@ import { Either, ifElseChain, Right, asyncEvalIteration } from '@ioffice/fp';
  */
 abstract class CIBuilder {
   /**
+   * Global setting to specify if the exception should be dumped or not.
+   */
+  dumpException = true;
+
+  /**
    * A string representation of one of the steps defined by the `BStep` enum.
    */
   step = 'init';
@@ -317,7 +322,7 @@ abstract class CIBuilder {
               return 0;
       })
     ).mapIfLeft(err => {
-      this.io.error(err, false);
+      this.io.error(err, this.dumpException);
       return err;
     });
 
@@ -327,7 +332,7 @@ abstract class CIBuilder {
           for (const _ of await this.git.switchAndDelete(branch, '__build'))
             return 0;
       })
-    ).mapIfLeft(err => this.io.warn(err));
+    ).mapIfLeft(err => this.io.warn(err, this.dumpException));
 
     return result;
   }
@@ -393,7 +398,7 @@ abstract class CIBuilder {
     this.io
       .setLogFileReleaseFlag()
       .swap()
-      .forEach(err => this.io.warn(err));
+      .forEach(err => this.io.warn(err, this.dumpException));
 
     const publishResult = await asyncEvalIteration<Exception, 0>(async () => {
       for (const _ of await this.runStep(this.buildStep[BStep.beforePublish]))
@@ -407,7 +412,7 @@ abstract class CIBuilder {
 
     (await this.runStep(this.buildStep[BStep.afterPublish]))
       .swap()
-      .forEach(err => this.io.warn(err));
+      .forEach(err => this.io.warn(err, this.dumpException));
 
     return Right(0);
   }
@@ -432,7 +437,7 @@ abstract class CIBuilder {
 
     (await this.runStep(this.buildStep[BStep.afterVerifyPullRequest]))
       .swap()
-      .forEach(err => this.io.warn(err));
+      .forEach(err => this.io.warn(err, this.dumpException));
 
     return Right(0);
   }

@@ -35,11 +35,14 @@ describe('CIBuilder - Pull Request', () => {
         return this.io.failure('beforeVerifyPullRequest error');
       }
     }
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_PULL_REQUEST_BRANCH: 'myBranch',
-      TEAMCITY_TARGET_BRANCH: 'master',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_PULL_REQUEST_BRANCH: 'myBranch',
+        TEAMCITY_TARGET_BRANCH: 'master',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
@@ -62,11 +65,14 @@ describe('CIBuilder - Pull Request', () => {
         return this.io.failure('verifyNonRelease error');
       }
     }
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_PULL_REQUEST_BRANCH: 'myBranch',
-      TEAMCITY_TARGET_BRANCH: 'master',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_PULL_REQUEST_BRANCH: 'myBranch',
+        TEAMCITY_TARGET_BRANCH: 'master',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
@@ -90,11 +96,14 @@ describe('CIBuilder - Pull Request', () => {
         return this.io.failure('verifyRelease error');
       }
     }
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_PULL_REQUEST_BRANCH: 'release',
-      TEAMCITY_TARGET_BRANCH: 'master',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_PULL_REQUEST_BRANCH: 'release',
+        TEAMCITY_TARGET_BRANCH: 'master',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
@@ -118,11 +127,14 @@ describe('CIBuilder - Pull Request', () => {
         return this.io.failure('afterVerifyPullRequest error');
       }
     }
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_PULL_REQUEST_BRANCH: 'release',
-      TEAMCITY_TARGET_BRANCH: 'master',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_PULL_REQUEST_BRANCH: 'release',
+        TEAMCITY_TARGET_BRANCH: 'master',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -157,11 +169,14 @@ describe('CIBuilder - Pull Request', () => {
       commitMessage: getEnv(TC.TEAMCITY_COMMIT_MESSAGE).getOrElse(''),
       commit: '',
     });
-    restoreEnv = mockedEnv({
-      CI: 'true',
-      TEAMCITY_PULL_REQUEST_BRANCH: 'release',
-      TEAMCITY_TARGET_BRANCH: 'master',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        CI: 'true',
+        TEAMCITY_PULL_REQUEST_BRANCH: 'release',
+        TEAMCITY_TARGET_BRANCH: 'master',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -178,11 +193,14 @@ describe('CIBuilder - Pull Request', () => {
 
   it('success - non-release', async () => {
     class TestBuilder extends Builder {}
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_PULL_REQUEST_BRANCH: 'myBranch',
-      TEAMCITY_TARGET_BRANCH: 'master',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_PULL_REQUEST_BRANCH: 'myBranch',
+        TEAMCITY_TARGET_BRANCH: 'master',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -198,11 +216,14 @@ describe('CIBuilder - Pull Request', () => {
 
   it('success - release', async () => {
     class TestBuilder extends Builder {}
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_PULL_REQUEST_BRANCH: 'release',
-      TEAMCITY_TARGET_BRANCH: 'master',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_PULL_REQUEST_BRANCH: 'release',
+        TEAMCITY_TARGET_BRANCH: 'master',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();

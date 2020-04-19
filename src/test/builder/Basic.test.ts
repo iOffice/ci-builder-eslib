@@ -50,11 +50,14 @@ describe('CIBuilder - Basic', () => {
       }
     }
 
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_TARGET_BRANCH: 'random',
-      TEAMCITY_COMMIT_MESSAGE: '[WIP] test message',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_TARGET_BRANCH: 'random',
+        TEAMCITY_COMMIT_MESSAGE: '[WIP] test message',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();

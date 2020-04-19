@@ -63,6 +63,7 @@ function makeBuilder(b: IBuilder): Builder {
 }
 
 class Builder extends CIBuilder {
+  dumpException = false;
   logSpy = sinon.spy();
   logStub = sinon.stub(this.io, 'log').callsFake((...args: unknown[]) => {
     this.logSpy(...args);
