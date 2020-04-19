@@ -19,7 +19,7 @@ class Github {
     return fetch(
       'https',
       'api.github.com',
-      `/${owner}/${repo}${endpoint}`,
+      `/${owner}/${repo}/${endpoint}`,
       {},
       headers,
       method,
