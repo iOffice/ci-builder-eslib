@@ -7,11 +7,16 @@ adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 As per semantic versioning
 
-> Major version zero (0.y.z) is for initial development. Anything may change at any time. 
+> Major version zero (0.y.z) is for initial development. Anything may change at any time.
 > The public API should not be considered stable.
 
 
 ## [Unreleased]
+
+## [0.3.0] - April 19, 2020
+- Everything should still be the same. libraries were updated in the project
+  to remove dependencies and to make the code a bit easier to read.
+
 
 ## [0.2.0] - August 13, 2019
 *Breaking Changes*
@@ -36,7 +41,8 @@ As per semantic versioning
 - Migrated tc-builder modified source code to this project.
 
 
-[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.0.1...0.1.0
 [0.0.1]: https://github.com/iOffice/ci-builder-eslib/compare/feda23fef09b15cae64ba9bece252f145ecbb974...0.0.1
