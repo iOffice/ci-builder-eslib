@@ -40,7 +40,7 @@ abstract class CISlack {
     }
 
     const attachment = this.createAttachment();
-    const promises = this.env.slackChannels.map(item => {
+    const promises = this.env.slackChannels.map((item) => {
       const [token, channel] = item.split('#');
       this.io.log(`sending message to channel: '${channel}'`);
       return this.sendMessage(token, channel, attachment);
@@ -135,7 +135,7 @@ abstract class CISlack {
     const status = this.getStatus();
     const statusMessage = this.getStatusMessage(status);
     const buildType = this.getBuildType()
-      .map(x => ` _${x}_`)
+      .map((x) => ` _${x}_`)
       .getOrElse('');
     const buildBranch = this.getBuildBranch();
     return {

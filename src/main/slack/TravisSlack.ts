@@ -5,10 +5,10 @@ class TravisSlack extends CISlack {
   getTitle(): string {
     const { repo, buildNumber } = this.env;
     const buildType = this.getBuildType()
-      .map(x => ` ${x}`)
+      .map((x) => ` ${x}`)
       .getOrElse('');
     const nodeVersion = Maybe(process.env['TRAVIS_NODE_VERSION'])
-      .map(ver => ` - Node ${ver}`)
+      .map((ver) => ` - Node ${ver}`)
       .getOrElse('');
     return `${repo} [Travis${buildType} Build #${buildNumber}${nodeVersion}]`;
   }
