@@ -13,6 +13,9 @@ As per semantic versioning
 
 ## [Unreleased]
 
+## [0.4.0] - April 20, 2020
+- Same as 0.3.x except that node 8 is no longer included in the PR builds.
+
 
 ## [0.3.3] - April 19, 2020
 - Everything should still be the same. libraries were updated in the project
@@ -44,9 +47,9 @@ As per semantic versioning
 - Migrated tc-builder modified source code to this project.
 
 
-[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.3.3...HEAD
-[0.3.3]: https://github.com/iOffice/ci-builder-eslib/compare/0.3.2...0.3.3
-[0.3.2]: https://github.com/iOffice/ci-builder-eslib/compare/0.2.0...0.3.2
+[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.4.0...HEAD
+[0.4.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.3.3...0.4.0
+[0.3.3]: https://github.com/iOffice/ci-builder-eslib/compare/0.2.0...0.3.3
 [0.2.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.0.1...0.1.0
 [0.0.1]: https://github.com/iOffice/ci-builder-eslib/compare/feda23fef09b15cae64ba9bece252f145ecbb974...0.0.1
