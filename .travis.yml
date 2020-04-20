@@ -30,4 +30,5 @@ script:
   - make run
 
 after_script:
-  - node bin/slack.js
+  - ls -al
+  - node ./bin/slack.js
