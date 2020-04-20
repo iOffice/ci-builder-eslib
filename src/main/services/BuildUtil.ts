@@ -33,13 +33,13 @@ class BuildUtil {
    */
   async getNodeVersion(warn = true): Promise<Option<SemVer>> {
     return (await util.exec('node --version')).fold(
-      err => {
+      (err) => {
         if (warn) {
           this.io.warn(new Exception(`node --version error: ${err}`));
         }
         return None as Option<SemVer>;
       },
-      ver => Maybe(semver.parse(ver)),
+      (ver) => Maybe(semver.parse(ver)),
     );
   }
 
@@ -61,7 +61,7 @@ class BuildUtil {
       },
     );
 
-    if (semVerEither.isLeft) return semVerEither.map(_ => 0 as 0);
+    if (semVerEither.isLeft) return semVerEither.map((_) => 0 as 0);
     const semVer = semVerEither.value as SemVer;
 
     if (semVer.prerelease.length > 0) {
@@ -93,7 +93,7 @@ class BuildUtil {
       },
     );
 
-    if (semVerEither.isLeft) return semVerEither.map(_ => 0 as 0);
+    if (semVerEither.isLeft) return semVerEither.map((_) => 0 as 0);
     const semVer = semVerEither.value as SemVer;
 
     if (!semver.gt(pkgVersion, semVer)) {
@@ -169,9 +169,9 @@ class BuildUtil {
     const [entries] = main.split('[Unreleased]:');
     const lines = entries.split('\n');
     const versions = lines
-      .filter(x => x.startsWith('## ['))
-      .map(line => (line.match(/## \[(.*)]/) || [])[1])
-      .filter(x => x);
+      .filter((x) => x.startsWith('## ['))
+      .map((line) => (line.match(/## \[(.*)]/) || [])[1])
+      .filter((x) => x);
     versions.unshift(newVersion);
     versions.push(firstCommit);
 

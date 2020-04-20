@@ -18,14 +18,7 @@ class Builder extends CIBuilder {
 
   async isRelease(branch: string, commitMsg: string): Promise<boolean> {
     const isMasterBranch = ['master', 'refs/heads/master'].includes(branch);
-    // Only running the release build in node 8
-    const isNode8 = (await this.buildUtil.getNodeVersion())
-      .map(ver => ver.major === 8)
-      .getOrElse(false);
-
-    return (
-      isNode8 && isMasterBranch && !!commitMsg.match(this.releaseBranchMerged)
-    );
+    return isMasterBranch && !!commitMsg.match(this.releaseBranchMerged);
   }
 
   async isReleasePullRequest(pullRequestBranch: string): Promise<boolean> {
@@ -33,13 +26,13 @@ class Builder extends CIBuilder {
   }
 
   test(): Promise<StepResult> {
-    return new Promise<StepResult>(fulfill => {
+    return new Promise<StepResult>((fulfill) => {
       const mocha = new Mocha();
       if (this.env.ci === CI.TRAVIS) {
         mocha.useColors(true);
       }
       mocha.addFile('build/test/index.js');
-      mocha.run(failures => {
+      mocha.run((failures) => {
         if (failures > 0) {
           const verb = failures === 1 ? 'is' : 'are';
           const amount = failures === 1 ? '' : 's';
@@ -73,14 +66,14 @@ class Builder extends CIBuilder {
   }
 
   async beforePublish(): Promise<StepResult> {
-    return util.move('build/main/', '.').map(_ => 0 as 0);
+    return util.move('build/main/', '.').map((_) => 0 as 0);
   }
 
   async getPublishInfo(): Promise<Either<Exception, [string, string]>> {
     const version = this.env.packageVersion;
     if (this.env.isPreRelease) {
       const majorEither = Maybe(semver.parse(version))
-        .map(x => x.major)
+        .map((x) => x.major)
         .toRight(new Exception(`Unable to parse version: ${version}`));
       return asyncEvalIteration(async () => {
         for (const major of majorEither)
@@ -98,8 +91,8 @@ class Builder extends CIBuilder {
     const name = this.env.packageName;
     return asyncEvalIteration(async () => {
       for (const [version, tag] of await this.getPublishInfo())
-        for (let _ of await this.yarn.publish(version, tag))
-          for (let _ of await this.io.success(
+        for (const _ of await this.yarn.publish(version, tag))
+          for (const _ of await this.io.success(
             0,
             [
               '\nRun:',
@@ -122,10 +115,10 @@ class Builder extends CIBuilder {
     const { currentVersion: ver, newVersion: newVer } = param;
     const bUtil = this.buildUtil;
     return asyncEvalIteration(async () => {
-      for (let _ of util.changePackageVersion(newVer))
-        for (let _ of await bUtil.updateChangeLog(newVer))
-          for (let _ of await bUtil.replaceVersionsInREADME(ver, newVer))
-            return 0;
+      let _;
+      for (_ of util.changePackageVersion(newVer))
+        for (_ of await bUtil.updateChangeLog(newVer))
+          for (_ of await bUtil.replaceVersionsInREADME(ver, newVer)) return 0;
     });
   }
 }

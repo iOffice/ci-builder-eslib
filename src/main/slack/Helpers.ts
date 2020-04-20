@@ -9,7 +9,10 @@ async function runSlacker(Slacker: ISlacker): Promise<IProgramExitCode> {
   const slack = new Slacker();
   const res = await slack.run();
 
-  return res.fold(_ => ({ code: 1 }), _ => ({ code: 0 }));
+  return res.fold(
+    (_) => ({ code: 1 }),
+    (_) => ({ code: 0 }),
+  );
 }
 
 export { runSlacker };
