@@ -8,6 +8,9 @@
     "ioffice-tsc": "./bin/cli.js",
     "ioffice-travis-slack": "./bin/slack.js"
   },
+  "scripts": {
+    "preinstall": "node yarn-check.js"
+  },
   "repository": "git@github.com:iOffice/ci-builder-eslib.git",
   "author": "iOFFICE Team",
   "license": "MIT",
