@@ -33,6 +33,7 @@ function compile(
   tsOptions: ts.CompilerOptions,
   esLintConfigPath: Option<string>,
 ): Record<string, IFileMessages> {
+  const rootDir = program.getCompilerOptions().rootDir;
   const results: Record<string, IFileMessages> = {};
   const outDirectory: string = tsOptions.outDir || '.';
   const emitResult: ts.EmitResult = program.emit();
@@ -42,7 +43,11 @@ function compile(
   );
   const emittedFiles: ts.SourceFile[] = program
     .getSourceFiles()
-    .filter((x) => !x.fileName.includes('node_modules'));
+    .filter(
+      (x) =>
+        (rootDir && x.fileName.includes(rootDir)) ||
+        !x.fileName.includes('node_modules'),
+    );
 
   const eslintResults = esLintConfigPath.map((configFile) => {
     const cli = new CLIEngine({
