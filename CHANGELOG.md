@@ -13,6 +13,10 @@ As per semantic versioning
 
 ## [Unreleased]
 
+## [0.5.2] - September 11, 2020
+- Removed yarn-check.js from published package.
+
+
 ## [0.5.1] - September 11, 2020
 - Fixed logic to only lint project files.
 
@@ -56,7 +60,8 @@ As per semantic versioning
 - Migrated tc-builder modified source code to this project.
 
 
-[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.1...HEAD
+[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.2...HEAD
+[0.5.2]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.1...0.5.2
 [0.5.1]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.0...0.5.1
 [0.5.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.3.3...0.4.0
