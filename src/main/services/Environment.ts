@@ -58,6 +58,7 @@ class Environment {
    */
   readonly ci: CI = getEnv(TC.TEAMCITY)
     .map((_) => CI.TEAMCITY)
+    .orElse((_) => getEnv('TC').map((_) => CI.TEAMCITY))
     .orElse((_) => getEnv(TRAVIS.TRAVIS).map((_) => CI.TRAVIS))
     .orElse((_) => getEnv(ENV.CI).map((_) => CI.OTHER))
     .getOrElse(CI.NONE);

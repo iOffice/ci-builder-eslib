@@ -8,6 +8,7 @@ import {
   IProjectStatus,
   ITSMessage,
 } from './Types';
+import { Color } from 'colors';
 
 /**
  * Insert the `msg` into the given number of spaces either on the left ('l') or
@@ -54,7 +55,7 @@ function _formatResults(buf: string[], messages: string[][]): void {
     });
   });
 
-  const colorMap: { [key: string]: Function } = {
+  const colorMap: { [key: string]: Color } = {
     error: colors.red,
     warning: colors.yellow,
     info: colors.blue,
