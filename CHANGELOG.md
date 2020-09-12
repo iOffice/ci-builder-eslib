@@ -13,6 +13,11 @@ As per semantic versioning
 
 ## [Unreleased]
 
+## [0.5.0] - September 11, 2020
+- Linting only project files
+- If `TC` is an environment variable then a Teamcity environment is assumed.
+
+
 ## [0.4.0] - April 20, 2020
 - Same as 0.3.x except that node 8 is no longer included in the PR builds.
 
@@ -47,7 +52,8 @@ As per semantic versioning
 - Migrated tc-builder modified source code to this project.
 
 
-[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.3.3...0.4.0
 [0.3.3]: https://github.com/iOffice/ci-builder-eslib/compare/0.2.0...0.3.3
 [0.2.0]: https://github.com/iOffice/ci-builder-eslib/compare/0.1.0...0.2.0
