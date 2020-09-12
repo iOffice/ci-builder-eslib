@@ -10,8 +10,8 @@ class Git {
    */
   async getBranch(): Promise<Either<Exception, string>> {
     return (await util.exec(`git rev-parse --abbrev-ref HEAD`)).fold(
-      err => this.io.failure(`Git.getBranch failure: ${err}`),
-      branch => this.io.success(branch, `Git branch: ${branch}`),
+      (err) => this.io.failure(`Git.getBranch failure: ${err}`),
+      (branch) => this.io.success(branch, `Git branch: ${branch}`),
     );
   }
 
@@ -20,8 +20,8 @@ class Git {
    */
   async getFirstCommit(): Promise<Either<Exception, string>> {
     return (await util.exec('git rev-list --max-parents=0 HEAD')).fold(
-      err => this.io.failure(`Git.getFirstCommit failure: ${err}`),
-      commit => this.io.success(commit, `First commit: ${commit}`),
+      (err) => this.io.failure(`Git.getFirstCommit failure: ${err}`),
+      (commit) => this.io.success(commit, `First commit: ${commit}`),
     );
   }
 
@@ -30,8 +30,8 @@ class Git {
    */
   async getCurrentCommit(): Promise<Either<Exception, string>> {
     return (await util.exec('git rev-parse HEAD')).fold(
-      err => this.io.failure(`Git.getCurrentCommit failure: ${err}`),
-      commit => this.io.success(commit, `Current commit: ${commit}`),
+      (err) => this.io.failure(`Git.getCurrentCommit failure: ${err}`),
+      (commit) => this.io.success(commit, `Current commit: ${commit}`),
     );
   }
 
@@ -40,13 +40,13 @@ class Git {
    */
   async getModifiedFiles(): Promise<Either<Exception, string[]>> {
     return (await util.execCmd('git status -s')).fold(
-      err => this.io.failure(`Git.getModifiedFiles failure: ${err}`),
-      value =>
+      (err) => this.io.failure(`Git.getModifiedFiles failure: ${err}`),
+      (value) =>
         this.io.success(
           value
             .split('\n')
-            .map(x => x.trim())
-            .filter(x => x),
+            .map((x) => x.trim())
+            .filter((x) => x),
         ),
     );
   }
@@ -60,11 +60,11 @@ class Git {
   ): Promise<Either<Exception, string>> {
     const newFlag = isNew ? ' -b' : '';
     return (await util.exec(`git checkout${newFlag} ${branch} -q`)).fold(
-      err =>
+      (err) =>
         this.io.failure(
           `Git.switchBranch(${branch}, ${isNew}) failure: ${err}`,
         ),
-      output => this.io.success(output, `Switched to '${branch}' branch`),
+      (output) => this.io.success(output, `Switched to '${branch}' branch`),
     );
   }
 
@@ -73,8 +73,8 @@ class Git {
    */
   async discardBranchChanges(): Promise<Either<Exception, string>> {
     return (await util.exec('git reset --hard && git clean -fd')).fold(
-      err => this.io.failure(`Git.discardBranchChanges failure: ${err}`),
-      output => this.io.success(output, `Branch changes have been discarded`),
+      (err) => this.io.failure(`Git.discardBranchChanges failure: ${err}`),
+      (output) => this.io.success(output, `Branch changes have been discarded`),
     );
   }
 
@@ -83,8 +83,9 @@ class Git {
    */
   async deleteBranch(branch: string): Promise<Either<Exception, string>> {
     return (await util.exec(`git branch -D ${branch} -q`)).fold(
-      err => this.io.failure(`Git.deleteBranch('${branch}') failure: ${err}`),
-      output => this.io.success(output, `'${branch}' branch has been deleted`),
+      (err) => this.io.failure(`Git.deleteBranch('${branch}') failure: ${err}`),
+      (output) =>
+        this.io.success(output, `'${branch}' branch has been deleted`),
     );
   }
 

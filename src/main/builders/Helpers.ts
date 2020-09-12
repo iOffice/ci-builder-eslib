@@ -15,7 +15,7 @@ async function runBuilder(
   const res = await builder.run();
 
   return res.fold(
-    err => {
+    (err) => {
       const msg = err.message;
       const steps = builder.failureSteps.join(' -> ');
       builder.io.error(new Exception(`Failures in \`${steps}\`: ${msg}`, err));
@@ -25,12 +25,12 @@ async function runBuilder(
       builder.io.disableLocalBlocks();
       return { code: 1 };
     },
-    _ => {
+    (_) => {
       if (dumpMessages) {
         builder.io
           .dumpMessages()
           .swap()
-          .forEach(err => {
+          .forEach((err) => {
             builder.io.log(`Unable to dump messages: ${err}`);
           });
       }

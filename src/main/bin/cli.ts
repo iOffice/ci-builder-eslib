@@ -3,6 +3,8 @@ import { compileCLI } from '../compiler';
 import { IParsedArgV, Exception, util } from '../util';
 import { Maybe } from '@ioffice/fp';
 
+type Unknown = Record<string, unknown>;
+
 let exitNumber = 0;
 
 const log = (msg: string): boolean => process.stdout.write(`${msg}\n`);
@@ -27,7 +29,7 @@ Options:
  --verbose: Print messages of the steps for the 'compile' command.
  --ci: Continuous Integration flag, minimizes the output in case there are too
        many errors.
- --no-msg-dump: Skip dumping error and warning messages to 
+ --no-msg-dump: Skip dumping error and warning messages to
                 './ciBuilder-log.json'.
  --no-lint: Skip linting.
 
@@ -78,27 +80,28 @@ const main = async (): Promise<void> => {
   if (help) {
     log(usage);
   } else if (version) {
-    ciPkg.forEach((pkg: object) => {
-      log(pkg['version']);
+    ciPkg.forEach((pkg: Unknown) => {
+      log(pkg['version'] as string);
     });
   } else {
     const definitions = (parsedArgs.value as IParsedArgV).definitions;
     util.readJSON(definitions['tsconfigPath'], '.').fold(
-      err => error(err),
-      (config: object) => {
-        const builderOptions = config['ciBuilder'] || {};
-        const messageMap = builderOptions['allowed'] || {};
+      (err) => error(err),
+      (config: Unknown) => {
+        const builderOptions = (config['ciBuilder'] || {}) as Unknown;
+        const messageMap = (builderOptions['allowed'] || {}) as Record<
+          string,
+          number
+        >;
+        const maxFiles = Maybe(definitions['ciFilesPerMessage']);
         exitNumber = compileCLI({
           messageMap,
           ci,
           tsconfigPath: definitions['tsconfigPath'],
           eslintPath: noLint ? undefined : definitions['eslintPath'],
           dumpMessages: !noMsgDump,
-          ciLimit: Maybe(definitions['ciLimit']).fold(10, x => +x),
-          ciFilesPerMessage: Maybe(definitions['ciFilesPerMessage']).fold(
-            5,
-            x => +x,
-          ),
+          ciLimit: Maybe(definitions['ciLimit']).fold(10, (x) => +x),
+          ciFilesPerMessage: maxFiles.fold(5, (x) => +x),
         });
       },
     );

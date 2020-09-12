@@ -4,11 +4,11 @@ import * as Mocha from 'mocha';
  * Making sure the builder works before we use it in the project.
  */
 const test = (): Promise<string> => {
-  return new Promise<string>(fulfill => {
+  return new Promise<string>((fulfill) => {
     const mocha = new Mocha();
     mocha.useColors(true);
     mocha.addFile('build/test/builder/index.js');
-    mocha.run(failures => {
+    mocha.run((failures) => {
       if (failures > 0) {
         const verb = failures === 1 ? 'is' : 'are';
         const amount = failures === 1 ? '' : 's';

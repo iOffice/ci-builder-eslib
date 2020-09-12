@@ -79,7 +79,7 @@ const _move = (src: string, dest: string, buf: string[]): void => {
     if (src.endsWith('/')) {
       // move directory contents
       const files = readdirSync(src);
-      files.forEach(file => {
+      files.forEach((file) => {
         const filePath = pth.normalize(`${src}/${file}`);
         const destPath = pth.normalize(`${dest}/${file}`);
         const fileStats = statSync(filePath);
@@ -120,14 +120,14 @@ const util = {
     cmd: string,
     print?: (data: string) => void,
   ): Promise<Either<string, string>> {
-    return new Promise<Either<string, string>>(fulfill => {
+    return new Promise<Either<string, string>>((fulfill) => {
       const parts = cmd.split(' ');
       const handle = spawn(parts[0], parts.slice(1));
       const buffer: string[] = [];
       const onData = print || ((data: string) => buffer.push(data.toString()));
       handle.stdout.on('data', onData);
       handle.stderr.on('data', onData);
-      handle.on('exit', code => {
+      handle.on('exit', (code) => {
         if (code === 0) {
           fulfill(Right(buffer.join('').trim()));
         } else {
@@ -143,7 +143,7 @@ const util = {
    * output of stdout.
    */
   exec(cmd: string): Promise<Either<string, string>> {
-    return new Promise<Either<string, string>>(fulfill => {
+    return new Promise<Either<string, string>>((fulfill) => {
       cpExec(cmd, (error, stdout, stderr) => {
         if (error) {
           return fulfill(Left(error.toString()));
@@ -164,8 +164,8 @@ const util = {
     const base: string = path || process.cwd();
     return Try(() => readFileSync(`${base}/${name}`, 'utf8'))
       .transform(
-        _ => Success(_),
-        err => toFailure('failed to read file', err, { name, path }),
+        (_) => Success(_),
+        (err) => toFailure('failed to read file', err, { name, path }),
       )
       .toEither();
   },
@@ -178,8 +178,9 @@ const util = {
       for (const contents of util.readFile(name, path))
         for (const obj of Try(() => JSON.parse(contents))
           .transform(
-            _ => Success(_),
-            err => toFailure('failed to parse JSON file', err, { name, path }),
+            (_) => Success(_),
+            (err) =>
+              toFailure('failed to parse JSON file', err, { name, path }),
           )
           .toEither())
           return obj;
@@ -195,10 +196,10 @@ const util = {
     path?: string,
   ): Either<Exception, 0> {
     const base: string = path || process.cwd();
-    return Try(_ => writeFileSync(`${base}/${name}`, contents))
+    return Try((_) => writeFileSync(`${base}/${name}`, contents))
       .transform(
-        _ => Success(0 as 0),
-        err => toFailure('failed to write file', err, { name, path }),
+        (_) => Success(0 as const),
+        (err) => toFailure('failed to write file', err, { name, path }),
       )
       .toEither();
   },
@@ -214,8 +215,8 @@ const util = {
   ): Either<Exception, 0> {
     const strContent = Try(() => JSON.stringify(contents, null, 2))
       .transform(
-        _ => Success(_),
-        err => toFailure('failed to stringify contents', err),
+        (_) => Success(_),
+        (err) => toFailure('failed to stringify contents', err),
       )
       .toEither() as Either<Exception, string>;
     return evalIteration<Exception, 0>(() => {
@@ -236,7 +237,7 @@ const util = {
       const lines = contents.split('\n');
       return Right(
         lines
-          .map(line =>
+          .map((line) =>
             line.trim().startsWith('"version"')
               ? `  "version": "${version}",`
               : line,
@@ -261,8 +262,8 @@ const util = {
     const buf: string[] = [];
     return Try(() => _move(src, dest, buf))
       .transform(
-        _ => Success(buf),
-        err => toFailure('Failure to move directories', err, { src, dest }),
+        (_) => Success(buf),
+        (err) => toFailure('Failure to move directories', err, { src, dest }),
       )
       .toEither();
   },

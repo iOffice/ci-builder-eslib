@@ -61,7 +61,7 @@ class BuildUtil {
       },
     );
 
-    if (semVerEither.isLeft) return semVerEither.map((_) => 0 as 0);
+    if (semVerEither.isLeft) return semVerEither.map((_) => 0 as const);
     const semVer = semVerEither.value as SemVer;
 
     if (semVer.prerelease.length > 0) {
@@ -93,7 +93,7 @@ class BuildUtil {
       },
     );
 
-    if (semVerEither.isLeft) return semVerEither.map((_) => 0 as 0);
+    if (semVerEither.isLeft) return semVerEither.map((_) => 0 as const);
     const semVer = semVerEither.value as SemVer;
 
     if (!semver.gt(pkgVersion, semVer)) {

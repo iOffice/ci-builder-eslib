@@ -6,7 +6,7 @@ import { Exception } from '../util';
 
 function composeQuery(params: Record<string, string>): string {
   return Object.keys(params)
-    .map(key => [key, encodeURIComponent(params[key].toString())].join('='))
+    .map((key) => [key, encodeURIComponent(params[key].toString())].join('='))
     .join('&');
 }
 
@@ -26,7 +26,7 @@ async function fetch<T>(
   method = 'GET',
   data?: unknown,
 ): Promise<Either<Exception, T>> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const _query = composeQuery(params);
     const query = _query ? `?${_query}` : '';
     const body = JSON.stringify(data);
@@ -45,17 +45,17 @@ async function fetch<T>(
       path: `${path}${query}`,
     };
     const requestMethod = protocol === 'https' ? https.request : http.request;
-    const req = requestMethod(options, res => {
+    const req = requestMethod(options, (res) => {
       const chunks: Buffer[] = [];
-      res.on('data', chunk => {
+      res.on('data', (chunk) => {
         chunks.push(chunk);
       });
       res.on('end', () => {
         const result = Buffer.concat(chunks).toString();
         const response = Try<T>(() => JSON.parse(result))
           .transform(
-            _ => Success(_),
-            err => toFailure('failed to parse JSON string', err),
+            (_) => Success(_),
+            (err) => toFailure('failed to parse JSON string', err),
           )
           .toEither<Exception>();
         const code = res.statusCode ?? 500;
@@ -73,7 +73,7 @@ async function fetch<T>(
         }
       });
     });
-    req.on('error', error => {
+    req.on('error', (error) => {
       console.error(error);
     });
     if (data) {

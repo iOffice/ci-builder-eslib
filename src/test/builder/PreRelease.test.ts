@@ -39,7 +39,7 @@ describe('CIBuilder - PreRelease', () => {
     const result = await builder.run();
     const errMsg = 'Commit the following files:\n  M file1\n  N file 2';
     result.fold(
-      err => expect(err.message).to.equal(errMsg),
+      (err) => expect(err.message).to.equal(errMsg),
       () => assert(false, 'should have failed'),
     );
     checkLogs(builder.logSpy, []);
@@ -54,7 +54,7 @@ describe('CIBuilder - PreRelease', () => {
     const result = await builder.run();
 
     result.fold(
-      err => expect(err.message).to.equal('Git.getBranch failure: cmd error'),
+      (err) => expect(err.message).to.equal('Git.getBranch failure: cmd error'),
       () => assert(false, 'should have failed'),
     );
     checkLogs(builder.logSpy, []);
@@ -73,7 +73,7 @@ describe('CIBuilder - PreRelease', () => {
     const errMsg = 'Git.switchBranch(__build, true) failure: cmd error';
 
     result.fold(
-      err => expect(err.message).to.equal(errMsg),
+      (err) => expect(err.message).to.equal(errMsg),
       () => assert(false, 'should have failed'),
     );
     checkLogs(builder.logSpy, [['Git branch: someBranch']]);
@@ -96,7 +96,7 @@ describe('CIBuilder - PreRelease', () => {
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
     result.fold(
-      err => expect(err.message).to.equal('stop before publish'),
+      (err) => expect(err.message).to.equal('stop before publish'),
       () => assert(false, 'should have failed'),
     );
 
@@ -126,7 +126,7 @@ describe('CIBuilder - PreRelease', () => {
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
     result.fold(
-      err => expect(err.message).to.equal('stop on publish'),
+      (err) => expect(err.message).to.equal('stop on publish'),
       () => assert(false, 'should have failed'),
     );
 

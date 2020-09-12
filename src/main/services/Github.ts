@@ -45,7 +45,7 @@ class Github {
       prerelease: false,
     });
     return result.fold(
-      err =>
+      (err) =>
         this.io.failure(
           {
             message: 'Failed to release to GitHub',
@@ -53,7 +53,7 @@ class Github {
           },
           err,
         ),
-      _ => this.io.success(0, 'Created Github release'),
+      (_) => this.io.success(0, 'Created Github release'),
     );
   }
 

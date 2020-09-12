@@ -22,7 +22,7 @@ describe('CIBuilder - Basic', () => {
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
     result.fold(
-      err => expect(err.message).to.equal('bad...'),
+      (err) => expect(err.message).to.equal('bad...'),
       () => assert(false, 'should have failed'),
     );
 

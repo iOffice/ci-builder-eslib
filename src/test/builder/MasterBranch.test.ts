@@ -27,12 +27,15 @@ describe('CIBuilder - Master Branch', () => {
 
   it('merged non-release branch', async () => {
     class TestBuilder extends Builder {}
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_TARGET_BRANCH: 'master',
-      TEAMCITY_COMMIT_MESSAGE:
-        'Merge pull request #12 from iOffice/superBranch did something good',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_TARGET_BRANCH: 'master',
+        TEAMCITY_COMMIT_MESSAGE:
+          'Merge pull request #12 from iOffice/superBranch did something good',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -52,17 +55,20 @@ describe('CIBuilder - Master Branch', () => {
         return this.io.failure('stop before publish');
       }
     }
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_TARGET_BRANCH: 'master',
-      TEAMCITY_COMMIT_MESSAGE:
-        'Merge pull request #12 from iOffice/release\n0.0.0',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_TARGET_BRANCH: 'master',
+        TEAMCITY_COMMIT_MESSAGE:
+          'Merge pull request #12 from iOffice/release\n0.0.0',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
     result.fold(
-      err => expect(err.message).to.equal('stop before publish'),
+      (err) => expect(err.message).to.equal('stop before publish'),
       () => assert(false, 'should have failed'),
     );
 
@@ -80,17 +86,20 @@ describe('CIBuilder - Master Branch', () => {
         return this.io.failure('stop publish');
       }
     }
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_TARGET_BRANCH: 'master',
-      TEAMCITY_COMMIT_MESSAGE:
-        'Merge pull request #12 from iOffice/release 0.0.0',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_TARGET_BRANCH: 'master',
+        TEAMCITY_COMMIT_MESSAGE:
+          'Merge pull request #12 from iOffice/release 0.0.0',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
     result.fold(
-      err => expect(err.message).to.equal('stop publish'),
+      (err) => expect(err.message).to.equal('stop publish'),
       () => assert(false, 'should have failed'),
     );
     checkLogs(builder.logSpy, [
@@ -108,12 +117,15 @@ describe('CIBuilder - Master Branch', () => {
         return this.io.failure('afterPublish error');
       }
     }
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_TARGET_BRANCH: 'master',
-      TEAMCITY_COMMIT_MESSAGE:
-        'Merge pull request #12 from iOffice/release 0.0.0',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_TARGET_BRANCH: 'master',
+        TEAMCITY_COMMIT_MESSAGE:
+          'Merge pull request #12 from iOffice/release 0.0.0',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();
@@ -130,12 +142,15 @@ describe('CIBuilder - Master Branch', () => {
 
   it('merged release - success', async () => {
     class TestBuilder extends Builder {}
-    restoreEnv = mockedEnv({
-      TEAMCITY: 'true',
-      TEAMCITY_TARGET_BRANCH: 'master',
-      TEAMCITY_COMMIT_MESSAGE:
-        'Merge pull request #12 from iOffice/release 0.0.0',
-    }, { clear: true });
+    restoreEnv = mockedEnv(
+      {
+        TEAMCITY: 'true',
+        TEAMCITY_TARGET_BRANCH: 'master',
+        TEAMCITY_COMMIT_MESSAGE:
+          'Merge pull request #12 from iOffice/release 0.0.0',
+      },
+      { clear: true },
+    );
 
     const builder = makeBuilder(TestBuilder);
     await builder.run();

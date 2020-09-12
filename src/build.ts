@@ -66,7 +66,7 @@ class Builder extends CIBuilder {
   }
 
   async beforePublish(): Promise<StepResult> {
-    return util.move('build/main/', '.').map((_) => 0 as 0);
+    return util.move('build/main/', '.').map((_) => 0 as const);
   }
 
   async getPublishInfo(): Promise<Either<Exception, [string, string]>> {
