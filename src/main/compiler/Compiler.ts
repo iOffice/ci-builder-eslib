@@ -43,10 +43,10 @@ function compile(
   );
   const emittedFiles: ts.SourceFile[] = program
     .getSourceFiles()
-    .filter(
-      (x) =>
-        (rootDir && x.fileName.includes(rootDir)) ||
-        !x.fileName.includes('node_modules'),
+    .filter((x) =>
+      rootDir
+        ? x.fileName.includes(rootDir)
+        : !x.fileName.includes('node_modules'),
     );
 
   const eslintResults = esLintConfigPath.map((configFile) => {
