@@ -35,8 +35,8 @@ class Yarn {
     );
     this.io.closeBlock('yarn-publish');
     return result.fold(
-      _ => this.io.failure('yarn publish failed'),
-      _ => this.io.success(0),
+      (_) => this.io.failure('yarn publish failed'),
+      (_) => this.io.success(0),
     );
   }
 
@@ -53,7 +53,7 @@ class Yarn {
         for (const val of (
           await util.exec(`npm whoami --registry ${registry}`)
         ).mapIfLeft(
-          err => new Exception({ message: 'npm whoami failure', data: err }),
+          (err) => new Exception({ message: 'npm whoami failure', data: err }),
         ))
           return val.trim();
     });
@@ -65,16 +65,16 @@ class Yarn {
   async getVersion(): Promise<Either<Exception, string>> {
     const name = this.env.packageName;
     return (await util.exec(`yarn info ${name} version --json`)).fold(
-      err =>
+      (err) =>
         this.io.failure<string>({
           message: 'failure to obtain package version from registry',
           data: Try(() => JSON.parse(err)).getOrElse(err),
         }),
-      async res =>
+      async (res) =>
         Try(() => JSON.parse(res))
           .transform(
-            obj => Success(obj['data'] as string),
-            parseError =>
+            (obj) => Success(obj['data'] as string),
+            (parseError) =>
               Failure(
                 new Exception({
                   message: 'failed to parse yarn response',

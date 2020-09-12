@@ -44,14 +44,14 @@ class IO {
   enableLocalBlocks(): void {
     if (this.env.ci === CI.NONE) {
       this.blocks.push('local');
-      this.restoreStreams = interceptWriteStreams(text => {
+      this.restoreStreams = interceptWriteStreams((text) => {
         const depth = this.blocks.length - 1;
         const padding = '  '.repeat(Math.max(depth, 0));
         const block = colors.grey(`[${this.blocks[depth]}]`);
         return text
           .replace(/\n$/, '')
           .split('\n')
-          .map(x => `${padding}${block} ${x}`)
+          .map((x) => `${padding}${block} ${x}`)
           .join('\n');
       });
     }
@@ -201,10 +201,9 @@ class IO {
   loadLogFile(): Either<Exception, IBuilderMessages> {
     return util
       .readJSON(this.logFile)
-      .mapIfLeft(ex => new Exception('failed to load log file', ex)) as Either<
-      Exception,
-      IBuilderMessages
-    >;
+      .mapIfLeft(
+        (ex) => new Exception('failed to load log file', ex),
+      ) as Either<Exception, IBuilderMessages>;
   }
 
   /**
@@ -214,8 +213,8 @@ class IO {
     const empty: IBuilderMessages = { errors: [], warnings: [] };
     return evalIteration<Exception, 0>(() => {
       for (const data of this.loadLogFile().fold(
-        _ => Right(empty),
-        x => Right(x),
+        (_) => Right(empty),
+        (x) => Right(x),
       )) {
         data.isRelease = true;
         for (const _ of util.writeJSON(data, this.logFile)) return 0;
@@ -232,7 +231,7 @@ class IO {
       errors: [...IO.errors],
       warnings: [...IO.warnings],
     };
-    this.loadLogFile().forEach(current => {
+    this.loadLogFile().forEach((current) => {
       data.errors.push(...current.errors);
       data.warnings.push(...current.warnings);
     });
@@ -255,22 +254,22 @@ class IO {
     currentVersion: string,
   ): Promise<Either<Exception, string>> {
     const parseVer = (): Option<SemVer> => Maybe(semver.parse(currentVersion));
-    const newPatch = parseVer().map(x => x.inc('patch').version);
-    const newMinor = parseVer().map(x => x.inc('minor').version);
-    const newMajor = parseVer().map(x => x.inc('major').version);
+    const newPatch = parseVer().map((x) => x.inc('patch').version);
+    const newMinor = parseVer().map((x) => x.inc('minor').version);
+    const newMajor = parseVer().map((x) => x.inc('major').version);
 
     // releaseSetup needs to be moved to its own script. For now making
     // inquierer being imported here so that node only loads it if when its
     // needed.
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const inquirer = require('inquirer');
-    const result = await TryAsync(_ =>
+    const result = await TryAsync((_) =>
       inquirer.prompt([
         {
           type: 'list',
           name: 'version',
           message: `Current version is ${currentVersion}. Choose the next version:`,
-          choices: [newPatch, newMinor, newMajor].map(x =>
+          choices: [newPatch, newMinor, newMajor].map((x) =>
             x.getOrElse('parse error'),
           ),
         },
@@ -278,7 +277,7 @@ class IO {
     );
 
     return result
-      .flatMap(answers => Success((answers as object)['version'] as string))
+      .flatMap((answers) => Success((answers as object)['version'] as string))
       .toEither();
   }
 }

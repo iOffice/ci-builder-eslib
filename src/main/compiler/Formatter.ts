@@ -29,7 +29,7 @@ function breakMsg(msg: string, size: number): string[] {
   const words: string[] = msg.split(' ');
   const line: string[] = [];
   let length = 0;
-  words.forEach(word => {
+  words.forEach((word) => {
     if (length + word.length <= size) {
       line.push(word);
       length += word.length + 1;
@@ -46,7 +46,7 @@ function breakMsg(msg: string, size: number): string[] {
 
 function _formatResults(buf: string[], messages: string[][]): void {
   const colSizes: number[] = [0, 0, 0, 0];
-  messages.forEach(msg => {
+  messages.forEach((msg) => {
     msg.forEach((item, index) => {
       if (item.length > colSizes[index]) {
         colSizes[index] = Math.min(item.length, 80);
@@ -62,7 +62,7 @@ function _formatResults(buf: string[], messages: string[][]): void {
     debug: colors.gray,
   };
 
-  messages.forEach(msg => {
+  messages.forEach((msg) => {
     const main: string[] = breakMsg(msg[3], colSizes[3]);
     buf.push('  ');
     buf.push(colorMap[msg[0]](align(msg[1], 'r', colSizes[1])));
@@ -95,7 +95,7 @@ function _formatResults(buf: string[], messages: string[][]): void {
 function formatResults(results: Record<string, IFileMessages>): string {
   const buffer: string[] = [];
   const fileNames: string[] = Object.keys(results).sort();
-  fileNames.forEach(fileName => {
+  fileNames.forEach((fileName) => {
     const obj: IFileMessages = results[fileName];
     const numMessages: number = obj.messages.length;
     if (!numMessages) {
@@ -128,13 +128,13 @@ function _formatExceptions(
   messages: [boolean, string, number, number][],
 ): void {
   let size = 0;
-  messages.forEach(msg => {
+  messages.forEach((msg) => {
     if (msg[1].length > size) {
       size = msg[1].length;
     }
   });
 
-  messages.forEach(msg => {
+  messages.forEach((msg) => {
     const failed = msg[0];
     const warn = msg[2] < msg[3];
     buf.push('  ');
@@ -174,7 +174,7 @@ function formatCIResults(
 ): string {
   const buffer: string[] = [];
   const msgTypes: string[] = Object.keys(byMessage).sort();
-  msgTypes.forEach(msgType => {
+  msgTypes.forEach((msgType) => {
     const obj = byMessage[msgType];
     const numMessages = obj.count;
     if (!numMessages) {
@@ -185,17 +185,17 @@ function formatCIResults(
     buffer.push(`\n${messageInfo.magenta}:\n`);
     buffer.push('\n');
 
-    const fileNames = obj.references.map(x => x.fileInfo.absPath);
+    const fileNames = obj.references.map((x) => x.fileInfo.absPath);
     const uniqueFileNames = Array.from(new Set(fileNames));
 
     const totalRefs = Math.min(listLimit, uniqueFileNames.length);
     const refs = uniqueFileNames.slice(0, totalRefs);
-    refs.forEach(msg => {
+    refs.forEach((msg) => {
       const msgReferences = obj.references.filter(
-        x => x.fileInfo.absPath === msg,
+        (x) => x.fileInfo.absPath === msg,
       );
       const locations = msgReferences.map(
-        x => `${x.message.line.toString().red}:${x.message.character}`,
+        (x) => `${x.message.line.toString().red}:${x.message.character}`,
       );
       buffer.push(`  - ${msg}\n`);
       buffer.push(`    ${locations.join(', ')}\n`);
@@ -231,7 +231,7 @@ function formatProjectResults(
   ).sort();
 
   const messages: [boolean, string, number, number][] = [];
-  allTypes.forEach(type => {
+  allTypes.forEach((type) => {
     const exception = projectStatus.exceptions[type];
     if (exception) {
       messages.push([
@@ -272,7 +272,7 @@ function formatFailureMessage(
   };
 
   const results = projectResults.results;
-  const numFiles = Object.keys(results).filter(fileName => {
+  const numFiles = Object.keys(results).filter((fileName) => {
     const obj: IFileMessages = results[fileName];
     return obj.messages.length > 0;
   }).length;

@@ -47,7 +47,7 @@ describe('CIBuilder - Pull Request', () => {
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
     result.fold(
-      err => expect(err.message).to.equal('beforeVerifyPullRequest error'),
+      (err) => expect(err.message).to.equal('beforeVerifyPullRequest error'),
       () => assert(false, 'should have failed'),
     );
 
@@ -77,7 +77,7 @@ describe('CIBuilder - Pull Request', () => {
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
     result.fold(
-      err => expect(err.message).to.equal('verifyNonRelease error'),
+      (err) => expect(err.message).to.equal('verifyNonRelease error'),
       () => assert(false, 'should have failed'),
     );
 
@@ -108,7 +108,7 @@ describe('CIBuilder - Pull Request', () => {
     const builder = makeBuilder(TestBuilder);
     const result = await builder.run();
     result.fold(
-      err => expect(err.message).to.equal('verifyRelease error'),
+      (err) => expect(err.message).to.equal('verifyRelease error'),
       () => assert(false, 'should have failed'),
     );
 

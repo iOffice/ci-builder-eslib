@@ -169,9 +169,9 @@ abstract class CIBuilder {
     const env = this.env;
 
     return ifElseChain(
-      [env.error.isDefined, async _ => env.error.toLeft(0 as 0)],
-      [env.ci === CI.NONE, _ => this.runStep(this.buildStep[BStep.nonCI])],
-    ).getOrElse(_ => this.runStep(this.buildStep[BStep.ciBuilder]));
+      [env.error.isDefined, async (_) => env.error.toLeft(0 as const)],
+      [env.ci === CI.NONE, (_) => this.runStep(this.buildStep[BStep.nonCI])],
+    ).getOrElse((_) => this.runStep(this.buildStep[BStep.ciBuilder]));
   }
 
   /**
@@ -181,9 +181,9 @@ abstract class CIBuilder {
     const { isPreRelease, isReleaseSetup } = this.env;
 
     return ifElseChain(
-      [isPreRelease, _ => this.runStep(this.buildStep[BStep.preRelease])],
-      [isReleaseSetup, _ => this.runStep(this.buildStep[BStep.startRelease])],
-    ).getOrElse(_ => this.runStep(this.buildStep[BStep.test]));
+      [isPreRelease, (_) => this.runStep(this.buildStep[BStep.preRelease])],
+      [isReleaseSetup, (_) => this.runStep(this.buildStep[BStep.startRelease])],
+    ).getOrElse((_) => this.runStep(this.buildStep[BStep.test]));
   }
 
   /**
@@ -312,7 +312,7 @@ abstract class CIBuilder {
     );
 
     // no point moving forward since we were unable to switch to build branch
-    if (branchEither.isLeft) return branchEither.map(_ => 0 as 0);
+    if (branchEither.isLeft) return branchEither.map((_) => 0 as const);
 
     const result = (
       await asyncEvalIteration<Exception, 0>(async () => {
@@ -321,7 +321,7 @@ abstract class CIBuilder {
             for (const _ of await this.io.success(0, 'Pre-release successful'))
               return 0;
       })
-    ).mapIfLeft(err => {
+    ).mapIfLeft((err) => {
       this.io.error(err, this.dumpException);
       return err;
     });
@@ -332,7 +332,7 @@ abstract class CIBuilder {
           for (const _ of await this.git.switchAndDelete(branch, '__build'))
             return 0;
       })
-    ).mapIfLeft(err => this.io.warn(err, this.dumpException));
+    ).mapIfLeft((err) => this.io.warn(err, this.dumpException));
 
     return result;
   }
@@ -398,7 +398,7 @@ abstract class CIBuilder {
     this.io
       .setLogFileReleaseFlag()
       .swap()
-      .forEach(err => this.io.warn(err, this.dumpException));
+      .forEach((err) => this.io.warn(err, this.dumpException));
 
     const publishResult = await asyncEvalIteration<Exception, 0>(async () => {
       for (const _ of await this.runStep(this.buildStep[BStep.beforePublish]))
@@ -412,7 +412,7 @@ abstract class CIBuilder {
 
     (await this.runStep(this.buildStep[BStep.afterPublish]))
       .swap()
-      .forEach(err => this.io.warn(err, this.dumpException));
+      .forEach((err) => this.io.warn(err, this.dumpException));
 
     return Right(0);
   }
@@ -437,7 +437,7 @@ abstract class CIBuilder {
 
     (await this.runStep(this.buildStep[BStep.afterVerifyPullRequest]))
       .swap()
-      .forEach(err => this.io.warn(err, this.dumpException));
+      .forEach((err) => this.io.warn(err, this.dumpException));
 
     return Right(0);
   }

@@ -42,26 +42,26 @@ function compile(
   );
   const emittedFiles: ts.SourceFile[] = program
     .getSourceFiles()
-    .filter(x => !x.fileName.includes('node_modules'));
+    .filter((x) => !x.fileName.includes('node_modules'));
 
-  const eslintResults = esLintConfigPath.map(configFile => {
+  const eslintResults = esLintConfigPath.map((configFile) => {
     const cli = new CLIEngine({
       useEslintrc: false,
       configFile,
     });
     return cli.executeOnFiles(
-      emittedFiles.filter(x => x && x.fileName).map(x => x.fileName),
+      emittedFiles.filter((x) => x && x.fileName).map((x) => x.fileName),
     );
   });
 
   const lintFailuresByFile: Record<string, Linter.LintMessage[]> = {};
-  eslintResults.forEach(eslintResult => {
-    eslintResult.results.forEach(entry => {
+  eslintResults.forEach((eslintResult) => {
+    eslintResult.results.forEach((entry) => {
       lintFailuresByFile[entry.filePath] = entry.messages;
     });
   });
 
-  emittedFiles.forEach(file => {
+  emittedFiles.forEach((file) => {
     if (!file || !file.fileName) {
       return;
     }
@@ -76,9 +76,9 @@ function compile(
       };
     }
 
-    Maybe(lintFailuresByFile[fileName]).forEach(failures => {
+    Maybe(lintFailuresByFile[fileName]).forEach((failures) => {
       const fileMessages: IFileMessages = results[fileName];
-      failures.forEach(failure => {
+      failures.forEach((failure) => {
         fileMessages.messages.push({
           message: failure.message,
           line: failure.line,
@@ -93,7 +93,7 @@ function compile(
     });
   });
 
-  allDiagnostics.forEach(diagnostic => {
+  allDiagnostics.forEach((diagnostic) => {
     const file = diagnostic.file;
     if (!file || !file.fileName || !diagnostic.start) {
       return;
@@ -131,7 +131,7 @@ function compileProject(
   if (project.error) {
     throw new Error(
       ts.formatDiagnostics([project.error], {
-        getCanonicalFileName: f => f,
+        getCanonicalFileName: (f) => f,
         getCurrentDirectory: process.cwd,
         getNewLine: () => '\n',
       }),
@@ -140,7 +140,7 @@ function compileProject(
   const parseConfigHost: ts.ParseConfigHost = {
     fileExists: fs.existsSync,
     readDirectory: ts.sys.readDirectory,
-    readFile: file => fs.readFileSync(file, 'utf8'),
+    readFile: (file) => fs.readFileSync(file, 'utf8'),
     useCaseSensitiveFileNames: true,
   };
   const parsed = ts.parseJsonConfigFileContent(
@@ -152,12 +152,12 @@ function compileProject(
   if (parsed.errors !== undefined) {
     // ignore warnings and 'TS18003: No inputs were found in config file ...'
     const errors = parsed.errors.filter(
-      d => d.category === ts.DiagnosticCategory.Error && d.code !== 18003,
+      (d) => d.category === ts.DiagnosticCategory.Error && d.code !== 18003,
     );
     if (errors.length !== 0) {
       throw new Error(
         ts.formatDiagnostics(errors, {
-          getCanonicalFileName: f => f,
+          getCanonicalFileName: (f) => f,
           getCurrentDirectory: process.cwd,
           getNewLine: () => '\n',
         }),
@@ -224,7 +224,7 @@ function getProjectStatus(
     warningCounter: projectResults.numWarnings,
   };
 
-  messageTypes.forEach(type => {
+  messageTypes.forEach((type) => {
     const message: IMessageInfo = projectResults.byMessage[type] || {
       count: 0,
       references: [],
@@ -254,12 +254,12 @@ function getProjectStatus(
   });
 
   exceptionsResults.status = ifElseChain(
-    [failureStatus.errorException, _ => ExitCode.ERROR_EXCEPTION],
-    [failureStatus.warningException, _ => ExitCode.WARNING_EXCEPTION],
-    [failureStatus.errorCounter > 0, _ => ExitCode.ERROR],
-    [failureStatus.warningCounter > 0, _ => ExitCode.WARNING],
-    [failureStatus.needsReadjustment, _ => ExitCode.NEEDS_READJUSTMENT],
-  ).getOrElse(_ => ExitCode.OK);
+    [failureStatus.errorException, (_) => ExitCode.ERROR_EXCEPTION],
+    [failureStatus.warningException, (_) => ExitCode.WARNING_EXCEPTION],
+    [failureStatus.errorCounter > 0, (_) => ExitCode.ERROR],
+    [failureStatus.warningCounter > 0, (_) => ExitCode.WARNING],
+    [failureStatus.needsReadjustment, (_) => ExitCode.NEEDS_READJUSTMENT],
+  ).getOrElse((_) => ExitCode.OK);
 
   return exceptionsResults;
 }
@@ -272,7 +272,7 @@ function getProjectStatus(
  */
 function compileCLI(config: ICompileConfig): ExitCode {
   const tsconfigPath = config.tsconfigPath;
-  const eslintPath = Maybe(config.eslintPath).filter(x => x !== '');
+  const eslintPath = Maybe(config.eslintPath).filter((x) => x !== '');
   const dumpMessages = Maybe(config.dumpMessages).getOrElse(true);
   const messageMap = Maybe(config.messageMap).getOrElse({});
   const ci = Maybe(config.ci).getOrElse(false);

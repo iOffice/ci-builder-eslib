@@ -84,7 +84,7 @@ const main = async (): Promise<void> => {
   } else {
     const definitions = (parsedArgs.value as IParsedArgV).definitions;
     util.readJSON(definitions['tsconfigPath'], '.').fold(
-      err => error(err),
+      (err) => error(err),
       (config: object) => {
         const builderOptions = config['ciBuilder'] || {};
         const messageMap = builderOptions['allowed'] || {};
@@ -94,10 +94,10 @@ const main = async (): Promise<void> => {
           tsconfigPath: definitions['tsconfigPath'],
           eslintPath: noLint ? undefined : definitions['eslintPath'],
           dumpMessages: !noMsgDump,
-          ciLimit: Maybe(definitions['ciLimit']).fold(10, x => +x),
+          ciLimit: Maybe(definitions['ciLimit']).fold(10, (x) => +x),
           ciFilesPerMessage: Maybe(definitions['ciFilesPerMessage']).fold(
             5,
-            x => +x,
+            (x) => +x,
           ),
         });
       },

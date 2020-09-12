@@ -23,6 +23,7 @@
     "src/test/builder/index.ts"
   ],
   "exclude": [
+    "./src/test/fixtures/*.ts",
     "node_modules",
     "target",
     "settings",

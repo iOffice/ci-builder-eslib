@@ -57,9 +57,9 @@ class Environment {
    * A enum representing the CI Tool in use.
    */
   readonly ci: CI = getEnv(TC.TEAMCITY)
-    .map(_ => CI.TEAMCITY)
-    .orElse(_ => getEnv(TRAVIS.TRAVIS).map(_ => CI.TRAVIS))
-    .orElse(_ => getEnv(ENV.CI).map(_ => CI.OTHER))
+    .map((_) => CI.TEAMCITY)
+    .orElse((_) => getEnv(TRAVIS.TRAVIS).map((_) => CI.TRAVIS))
+    .orElse((_) => getEnv(ENV.CI).map((_) => CI.OTHER))
     .getOrElse(CI.NONE);
 
   /**
@@ -121,22 +121,22 @@ class Environment {
    * A list of slack channels that need to be sent notifications.
    */
   readonly slackChannels: string[] = Object.keys(process.env)
-    .filter(key => key.startsWith('SLACK_CHANNEL_'))
-    .map(channel => process.env[channel] || '')
-    .filter(x => x);
+    .filter((key) => key.startsWith('SLACK_CHANNEL_'))
+    .map((channel) => process.env[channel] || '')
+    .filter((x) => x);
 
   /**
    * `true` if the builder is meant to setup a release.
    */
   readonly isReleaseSetup: boolean = getEnv(ENV.RELEASE_SETUP)
-    .map(x => !!x)
+    .map((x) => !!x)
     .getOrElse(false);
 
   /**
    * `true` if the builder is meant to create a pre release of the project.
    */
   readonly isPreRelease: boolean = getEnv(ENV.PRE_RELEASE)
-    .map(x => !!x)
+    .map((x) => !!x)
     .getOrElse(false);
 
   /**
@@ -220,12 +220,12 @@ class Environment {
 
   private getRepoInfo(pkg: object): Either<Exception, [string, string]> {
     return Maybe(pkg['repository'])
-      .flatMap(x => (typeof x !== 'string' ? Maybe(x['url']) : Some(x)))
+      .flatMap((x) => (typeof x !== 'string' ? Maybe(x['url']) : Some(x)))
       .toRight(new Exception('missing "repository" field in "package.json"'))
-      .flatMap(url =>
-        Try(_ => Maybe(url.match(/(.*)[\/:](.*)\/(.*)\.git$/)))
+      .flatMap((url) =>
+        Try((_) => Maybe(url.match(/(.*)[\/:](.*)\/(.*)\.git$/)))
           .transform(
-            opt =>
+            (opt) =>
               opt.fold(
                 () =>
                   Failure<[string, string]>(
@@ -234,9 +234,9 @@ class Environment {
                       data: { url },
                     }),
                   ),
-                parts => Success([parts[2], parts[3]] as [string, string]),
+                (parts) => Success([parts[2], parts[3]] as [string, string]),
               ),
-            err =>
+            (err) =>
               Failure(
                 new Exception(
                   { message: 'failed to match on git url', data: { url } },
