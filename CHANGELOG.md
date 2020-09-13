@@ -15,6 +15,7 @@ As per semantic versioning
 
 ## [0.5.3] - September 13, 2020
 - Removed unnecessary peer dependencies since we are using pnpm.
+- NPM registry matches in both .npmrc file package.json file.
 
 
 ## [0.5.2] - September 11, 2020
