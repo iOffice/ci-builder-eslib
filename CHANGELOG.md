@@ -13,6 +13,11 @@ As per semantic versioning
 
 ## [Unreleased]
 
+## [0.5.4] - September 13, 2020
+- The env var `TC` needs to be the string `true` if we are to assume that we are running in
+  Teamcity.
+
+
 ## [0.5.3] - September 13, 2020
 - Removed unnecessary peer dependencies since we are using pnpm.
 - NPM registry matches in both .npmrc file package.json file.
@@ -65,7 +70,8 @@ As per semantic versioning
 - Migrated tc-builder modified source code to this project.
 
 
-[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.3...HEAD
+[Unreleased]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.4...HEAD
+[0.5.4]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.3...0.5.4
 [0.5.3]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.2...0.5.3
 [0.5.2]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.1...0.5.2
 [0.5.1]: https://github.com/iOffice/ci-builder-eslib/compare/0.5.0...0.5.1
