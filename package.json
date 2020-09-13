@@ -38,7 +38,7 @@
     "@ioffice/fp": "0.3.0",
     "colors": "1.4.0",
     "inquirer": "6.5.0",
-    "semver": "6.2.0",
+    "semver": "6.2.0"
   },
   "peerDependencies": {
     "eslint": ">=7.1",
