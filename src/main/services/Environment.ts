@@ -20,6 +20,7 @@ import {
   Failure,
   evalIteration,
   Left,
+  None,
 } from '@ioffice/fp';
 import { Exception, util } from '../util';
 
@@ -58,7 +59,9 @@ class Environment {
    */
   readonly ci: CI = getEnv(TC.TEAMCITY)
     .map((_) => CI.TEAMCITY)
-    .orElse((_) => getEnv('TC').map((_) => CI.TEAMCITY))
+    .orElse((_) =>
+      getEnv('TC').flatMap((x) => (x === 'true' ? Some(CI.TEAMCITY) : None)),
+    )
     .orElse((_) => getEnv(TRAVIS.TRAVIS).map((_) => CI.TRAVIS))
     .orElse((_) => getEnv(ENV.CI).map((_) => CI.OTHER))
     .getOrElse(CI.NONE);
